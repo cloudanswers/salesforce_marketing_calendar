@@ -13,94 +13,94 @@
 <apex:includeScript value="{!URLFOR($Resource.FullCalendar, 'jquery.qtip-1.0.0-rc3.min.js')}"/>
 
 <script type='text/javascript'>
-	$(document).ready(function() {
-		var date = new Date();
-		var d = date.getDate();
-		var m = date.getMonth();
-		var y = date.getFullYear();
-		$('#calendarx').fullCalendar({
-			editable: false,
-			events: [
-				<apex:variable var="prioritem" value="false"/>
-				<apex:repeat value="{!displayRows}" var="row">
-					<apex:outputtext value="," rendered="{!prioritem='true'}"/>
-					<apex:variable var="prioritem" value="true"/>
-					{
-						title:'{!JSENCODE(row.title)}',
-						start: new Date({!row.startDateYear},{!row.startDateMonth},{!row.startDateDay}),
-						end:   new Date({!row.endDateYear},{!row.endDateMonth},{!row.endDateDay}),
-						allDay: true,
-						url: '{!JSENCODE(row.url)}',
-						className: 'calcolor-{!JSENCODE(row.color)}',
-						campaign_type: '{!JSENCODE(row.c.Type)}',
-						campaign_responses: '{!JSENCODE(TEXT(row.c.NumberOfResponses))}',
-						campaign_colorStatus: '{!JSENCODE(row.c.Color_Status__c)}',
-						campaign_status: '{!JSENCODE(row.c.Status)}',
-						campaign_owner: '{!JSENCODE(row.c.Owner.Name)}'
-					}
-				</apex:repeat>
-				/*{!calendarJson}*/
-			],
-			eventClick: function(event) {
-		        if (event.url) {
-		            window.open(event.url);
-		            return false;
-		        }
-		    },
-			eventRender: function(event, element, view){
-				element.qtip({ 
-					position: {
-						corner: { 
-							target: 'topMiddle', 
-							tooltip: 'bottomMiddle' 
-						}
-					},
-					style: { 
-						width: 300,
-						color: 'black',
-						name: 'light'
-					},
-					content: "<b>Campaign:</b> " + event.title + "<br/>" +
-						"<b>Type:</b> "+event.campaign_type+"<br/>"+
-						"<b># Responses:</b> "+event.campaign_responses+"<br/>"+
-						"<b>Status:</b> "+event.campaign_status+"<br/>"+
-						"<b>Campaign Owner:</b> "+event.campaign_owner+"<br/>"
-				});
-			}
-		});
-	});
-	$("#configToggleButton").click(function () {
-		$("#configFormDiv").slideToggle("slow");
-	});
+    $(document).ready(function() {
+        var date = new Date();
+        var d = date.getDate();
+        var m = date.getMonth();
+        var y = date.getFullYear();
+        $('#calendarx').fullCalendar({
+            editable: false,
+            events: [
+                <apex:variable var="prioritem" value="false"/>
+                <apex:repeat value="{!displayRows}" var="row">
+                    <apex:outputtext value="," rendered="{!prioritem='true'}"/>
+                    <apex:variable var="prioritem" value="true"/>
+                    {
+                        title:'{!JSENCODE(row.title)}',
+                        start: new Date({!row.startDateYear},{!row.startDateMonth},{!row.startDateDay}),
+                        end:   new Date({!row.endDateYear},{!row.endDateMonth},{!row.endDateDay}),
+                        allDay: true,
+                        url: '{!JSENCODE(row.url)}',
+                        className: 'calcolor-{!JSENCODE(row.color)}',
+                        campaign_type: '{!JSENCODE(row.c.Type)}',
+                        campaign_responses: '{!JSENCODE(TEXT(row.c.NumberOfResponses))}',
+                        campaign_colorStatus: '{!JSENCODE(row.c.Color_Status__c)}',
+                        campaign_status: '{!JSENCODE(row.c.Status)}',
+                        campaign_owner: '{!JSENCODE(row.c.Owner.Name)}'
+                    }
+                </apex:repeat>
+                /*{!calendarJson}*/
+            ],
+            eventClick: function(event) {
+                if (event.url) {
+                    window.open(event.url);
+                    return false;
+                }
+            },
+            eventRender: function(event, element, view){
+                element.qtip({ 
+                    position: {
+                        corner: { 
+                            target: 'topMiddle', 
+                            tooltip: 'bottomMiddle' 
+                        }
+                    },
+                    style: { 
+                        width: 300,
+                        color: 'black',
+                        name: 'light'
+                    },
+                    content: "<b>Campaign:</b> " + event.title + "<br/>" +
+                        "<b>Type:</b> "+event.campaign_type+"<br/>"+
+                        "<b># Responses:</b> "+event.campaign_responses+"<br/>"+
+                        "<b>Status:</b> "+event.campaign_status+"<br/>"+
+                        "<b>Campaign Owner:</b> "+event.campaign_owner+"<br/>"
+                });
+            }
+        });
+    });
+    $("#configToggleButton").click(function () {
+        $("#configFormDiv").slideToggle("slow");
+    });
 </script>
 <style type='text/css'>
-	#calendar {
-		margin: 0 auto;
-	}
-	
-	<apex:repeat value="{!colors}" var="color">
-	.calcolor-{!color.bg},
-	.fc-agenda .calcolor-{!color.bg} .fc-event-time,
-	.calcolor-{!color.bg} a {
-	    background-color: {!color.bg};
-	    border-color: {!color.bg};
-	    color: {!color.fg};
-	}
-	
-	</apex:repeat>
-	
-	.fc-header-title{
-		font-size:150%;
-	}
-	
+    #calendar {
+        margin: 0 auto;
+    }
+    
+    <apex:repeat value="{!colors}" var="color">
+    .calcolor-{!color.bg},
+    .fc-agenda .calcolor-{!color.bg} .fc-event-time,
+    .calcolor-{!color.bg} a {
+        background-color: {!color.bg};
+        border-color: {!color.bg};
+        color: {!color.fg};
+    }
+    
+    </apex:repeat>
+    
+    .fc-header-title{
+        font-size:150%;
+    }
+    
 </style>
 
 <div id='calendarx'></div>
 
 <div>
-	<apex:outputLink value="http://www.cambridgecloudpartners.com" id="poweredByLink" target="_blank">
-		<apex:image url="{!URLFOR($Resource.FullCalendar, 'images/poweredby.gif')}" width="401" height="44" />
-	</apex:outputLink>
+    <apex:outputLink value="http://www.cambridgecloudpartners.com" id="poweredByLink" target="_blank">
+        <apex:image url="{!URLFOR($Resource.FullCalendar, 'images/poweredby.gif')}" width="401" height="44" />
+    </apex:outputLink>
 </div>
 
 </apex:page>
