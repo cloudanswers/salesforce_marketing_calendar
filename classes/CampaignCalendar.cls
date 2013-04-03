@@ -4,43 +4,30 @@ FullCalendar.resource is a zip file containing the open source jquery and fullca
 Copyright (c) 2011 James Sullivan, Cambridge Cloud Partners
 */
 public with sharing class CampaignCalendar {
-    public class CalendarEntry{
-        private CampaignCalendar cc;
-        public Campaign c {get;set;}
-        public String title {get;set;}
-        public String url {get;set;}
-        public String color {get;set;}
-        public Date startDate {get;set;}
-        public Date endDate {get;set;}
-        public String getStartDateYear(){return (startDate != null?''+startDate.year():'0');}
-        public String getStartDateMonth(){return (startDate != null?''+(startDate.month()-1):'0');}
-        public String getStartDateDay(){return (startDate != null?''+startDate.day():'0');}
-        public String getEndDateYear(){return (endDate != null?''+endDate.year():'0');}
-        public String getEndDateMonth(){return (endDate != null?''+(endDate.month()-1):'0');}
-        public String getEndDateDay(){return (endDate != null?''+endDate.day():'0');}
-        public CalendarEntry(Campaign c,CampaignCalendar cc){
-            this.c = c;
-            this.cc = cc;
-            this.title = c.Name;
-            url = '/'+c.Id;
-            startDate = c.StartDate;
-            endDate = c.EndDate;
-            if(endDate == null)
-                endDate = startDate;
-            color = c.Color_Status__c;
-            if(color == null || color == 'null' || color == ''){
-                color = 'blue';
-                c.Color_Status__c = '';
+	public class CalendarEntry{
+        public Campaign campaign;
+        public String className;
+        public String title;
+        public String url;
+        public String startDate;
+        public String endDate;
+        public Boolean  allDay = true;
+        public CalendarEntry(Campaign campaign){
+            this.campaign = campaign;
+            this.title = campaign.Name;
+            this.url = '/'+campaign.Id;
+            
+            // Date() in javascript is datetime, so just passing date means it ends up in yesterday (when you're in american time zones)
+            this.startDate = '' + this.campaign.StartDate.year() + '-' + this.campaign.StartDate.month() + '-' + this.campaign.StartDate.day();
+            this.endDate = '' + this.campaign.EndDate.year() + '-' + this.campaign.EndDate.month() + '-' + this.campaign.EndDate.day();
+
+            if(campaign.Color_Status__c == null || campaign.Color_Status__c == 'null' || campaign.Color_Status__c == ''){
+                campaign.Color_Status__c = 'blue';
             }
-            color = color.toLowerCase();
+            className = 'calcolor-'+campaign.Color_Status__c.toLowerCase();
         }
     }
-    
-    public CalendarEntry[] displayRows {get;set;}
-    public String calendarJson {get;set;}
-    public Campaign[] campaigns {get;set;}
-    public Boolean isTest = false;
-    
+	
     // taken from w3c web colors
     public static final Map<String,String> colors = new Map<String,String>{
         'maroon' => 'white',
@@ -76,104 +63,80 @@ public with sharing class CampaignCalendar {
             displayColors.add( new Color(bgcolor,colors.get(bgcolor)) );
         return displayColors;
     }
+        
+
     
-    // constructor
-    
-    public CampaignCalendar(){
-        refresh();
+    @RemoteAction
+    public static List<CalendarEntry> getCalendarEntry(){
+         List<CalendarEntry> calendarEntries =  new List<CalendarEntry>();
+         List<Campaign> campaigns = queryCampaign(
+                                                     new Set<String>{
+                                                                         'Name',
+                                                                         'StartDate',
+                                                                         'EndDate',
+                                                                         'color_status__c',
+                                                                         'Owner.Name',
+                                                                         'Status',
+                                                                         'Type',
+                                                                         'NumberOfResponses'
+                                                                     }
+                                                     ,'IsActive = true AND StartDate != null AND Color_Status__c != \'Hide\''
+                                                 );
+         for(Campaign c : campaigns){
+            calendarEntries.add(new CalendarEntry(c));
+         }
+         
+         return calendarEntries;
     }
     
-    public PageReference refresh(){
-        
-        displayRows = new List<CalendarEntry>();
-        String soql =
-            'select Id,Name,StartDate,EndDate,Color_Status__c, '+
-            'Owner.Name,'+
-            'Status,Type, NumberOfResponses '+
-            'from Campaign '+
-            'where IsActive = true '+
-            'and StartDate != null '+
-            'and Color_Status__c != \'Hide\' ';
-        if(isTest)
-            soql += ' and CreatedDate = TODAY limit 100 ';
-        
-        campaigns = new List<Campaign>();
-        for(Campaign c : Database.query(soql)){
-            campaigns.add(c);
-            CalendarEntry ce = new CalendarEntry(c,this);
-            displayRows.add(ce);
-        }
-        
-        return null;
-    }
-    
-     /*Method to search lead based on company name and the fieldset*/
-    private List<Campaign> queryCampaign(Set<String> additionalFields,String whereClause ) {
-        Set<String> fields = new Set<String>();
-        String query = 'SELECT ';
+   
+    private static List<Campaign> queryCampaign(Set<String> additionalFields,String whereClause ) {
+        Set<String> fields = new Set<String>{'id'};
+        String query = 'SELECT Id';
         
         for(String fs : additionalFields){
-            fs = fs.toLowerCase();
-            fields.add(fs);
-            query = query+','+fs;
+            if(!fields.contains(fs) && !fields.contains(fs.toLowerCase())){
+                fs = fs.toLowerCase();
+                fields.add(fs);
+                query = query+','+fs;
+            }
         }
         
         for(Schema.FieldSetMember f : SObjectType.Campaign.FieldSets.marketing_cal__MarketingCalendarPopup.getFields()) {
-            if(!additionalFields.contains(f.getFieldPath().toLowerCase())){
-                query += f.getFieldPath().toLowerCase() + ', ';
+            if(!fields.contains(f.getFieldPath().toLowerCase())){
+                query = query+','+f.getFieldPath().toLowerCase();
             }
         }
+        query = query + ' FROM Campaign';
+        query = (whereClause !=null && whereClause!='') ? query +' WHERE ' +whereClause : query;
         return Database.query(query);
     }
     
-    @isTest
-    public static void test1(){
-        CampaignCalendar types = new CampaignCalendar(); // just to get types
+    static testMethod void testController(){
         List<Campaign> campaigns = new List<Campaign>();
-        for(Integer i = 0 ; i < 10 ; i++ )
-            campaigns.add(
-                new Campaign(
-                    Name = 'asdf',
-                    StartDate = Date.today().addDays(campaigns.size()*2),
-                    EndDate = Date.today().addDays(campaigns.size()*2),
-                    Color_Status__c = 'Red',
-                    Status = 'Active',
-                    IsActive = true
-                )
-            );
+        for(Integer i = 0 ; i < 10 ; i++ ){
+            Campaign campaign = new Campaign(
+                                        Name = 'asdf',
+                                        StartDate = Date.today().addDays(campaigns.size()*2),
+                                        EndDate = Date.today().addDays(campaigns.size()*2),
+                                        Color_Status__c = 'Red',
+                                        Status = 'Active',
+                                        IsActive = true
+                                    );
+            
+            if(i > 8){
+                campaign.Color_Status__c = null;
+            }
+            campaigns.add(campaign);
+        }
         insert campaigns;
         
-        PageReference pr = Page.CampaignCalendar;
-        pr.getParameters().put('startDate',Date.today().month()+'/'+Date.today().day()+'/'+Date.today().year());
-        pr.getParameters().put('types',campaigns[0].Type);
-        Test.setCurrentPage(pr);
-        CampaignCalendar cc = new CampaignCalendar();
-        
-        cc.getColors();
-        
-        cc.isTest = true;
-        cc.refresh();
-        
-        CalendarEntry validationCampaignEntry;
-        for(CalendarEntry ce : cc.displayRows)
-            if(ce.c.Id == campaigns[0].Id)
-                validationCampaignEntry = ce;
-        
-        System.assertEquals(String.valueOf(Date.today().day()),validationCampaignEntry.getEndDateDay());
-        System.assertEquals(String.valueOf(Date.today().month()-1),validationCampaignEntry.getEndDateMonth());
-        System.assertEquals(String.valueOf(Date.today().year()),validationCampaignEntry.getEndDateYear());
-        System.assertEquals(String.valueOf(Date.today().day()),validationCampaignEntry.getStartDateDay());
-        System.assertEquals(String.valueOf(Date.today().month()-1),validationCampaignEntry.getStartDateMonth());
-        System.assertEquals(String.valueOf(Date.today().year()),validationCampaignEntry.getStartDateYear());
-        
-        // test CalendarEntry replacement of nulls
-        
-        CalendarEntry ce = new CalendarEntry(new Campaign(),cc);
-        System.assertEquals('0',ce.getEndDateDay());
-        System.assertEquals('0',ce.getEndDateMonth());
-        System.assertEquals('0',ce.getEndDateYear());
-        System.assertEquals('0',ce.getStartDateDay());
-        System.assertEquals('0',ce.getStartDateMonth());
-        System.assertEquals('0',ce.getStartDateYear());
+        Test.startTest();
+            CampaignCalendar cc = new CampaignCalendar();
+            System.assertNotEquals(null,cc.getColors());
+            System.assertEquals(campaigns.size(),CampaignCalendar.getCalendarEntry().size());
+        Test.stopTest();
     }
+    
+
 }

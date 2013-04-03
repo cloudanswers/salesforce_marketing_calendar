@@ -1,106 +1,151 @@
 <apex:page controller="CampaignCalendar" cache="false" tabstyle="Campaign">
 
-<apex:sectionHeader subTitle="Marketing Calendar" />
+    <apex:sectionHeader subTitle="Marketing Calendar" />
+    
+    <br/>
 
-<br/>
+    <apex:stylesheet value="{!URLFOR($Resource.FullCalendar, 'fullcalendar.css')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.FullCalendar, 'jquery/jquery.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.FullCalendar, 'jquery/ui.core.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.FullCalendar, 'jquery/ui.draggable.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.FullCalendar, 'jquery/ui.resizable.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.FullCalendar, 'fullcalendar.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.FullCalendar, 'jsrender.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.FullCalendar, 'jquery.qtip-1.0.0-rc3.min.js')}"/>
 
-<apex:stylesheet value="{!URLFOR($Resource.FullCalendar, 'fullcalendar.css')}"/>
-<apex:includeScript value="{!URLFOR($Resource.FullCalendar, 'jquery/jquery.js')}"/>
-<apex:includeScript value="{!URLFOR($Resource.FullCalendar, 'jquery/ui.core.js')}"/>
-<apex:includeScript value="{!URLFOR($Resource.FullCalendar, 'jquery/ui.draggable.js')}"/>
-<apex:includeScript value="{!URLFOR($Resource.FullCalendar, 'jquery/ui.resizable.js')}"/>
-<apex:includeScript value="{!URLFOR($Resource.FullCalendar, 'fullcalendar.min.js')}"/>
-<apex:includeScript value="{!URLFOR($Resource.FullCalendar, 'jquery.qtip-1.0.0-rc3.min.js')}"/>
-
-<script type='text/javascript'>
-    $(document).ready(function() {
-        var date = new Date();
-        var d = date.getDate();
-        var m = date.getMonth();
-        var y = date.getFullYear();
-        $('#calendarx').fullCalendar({
-            editable: false,
-            events: [
-                <apex:variable var="prioritem" value="false"/>
-                <apex:repeat value="{!displayRows}" var="row">
-                    <apex:outputtext value="," rendered="{!prioritem='true'}"/>
-                    <apex:variable var="prioritem" value="true"/>
-                    {
-                        title:'{!JSENCODE(row.title)}',
-                        start: new Date({!row.startDateYear},{!row.startDateMonth},{!row.startDateDay}),
-                        end:   new Date({!row.endDateYear},{!row.endDateMonth},{!row.endDateDay}),
-                        allDay: true,
-                        url: '{!JSENCODE(row.url)}',
-                        className: 'calcolor-{!JSENCODE(row.color)}',
-                        campaign_type: '{!JSENCODE(row.c.Type)}',
-                        campaign_responses: '{!JSENCODE(TEXT(row.c.NumberOfResponses))}',
-                        campaign_colorStatus: '{!JSENCODE(row.c.Color_Status__c)}',
-                        campaign_status: '{!JSENCODE(row.c.Status)}',
-                        campaign_owner: '{!JSENCODE(row.c.Owner.Name)}'
-                    }
-                </apex:repeat>
-                /*{!calendarJson}*/
-            ],
-            eventClick: function(event) {
-                if (event.url) {
-                    window.open(event.url);
-                    return false;
-                }
-            },
-            eventRender: function(event, element, view){
-                element.qtip({ 
-                    position: {
-                        corner: { 
-                            target: 'topMiddle', 
-                            tooltip: 'bottomMiddle' 
-                        }
-                    },
-                    style: { 
-                        width: 300,
-                        color: 'black',
-                        name: 'light'
-                    },
-                    content: "<b>Campaign:</b> " + event.title + "<br/>" +
-                        "<b>Type:</b> "+event.campaign_type+"<br/>"+
-                        "<b># Responses:</b> "+event.campaign_responses+"<br/>"+
-                        "<b>Status:</b> "+event.campaign_status+"<br/>"+
-                        "<b>Campaign Owner:</b> "+event.campaign_owner+"<br/>"
-                });
-            }
+    <script type='text/javascript'>
+        $(document).ready(function() {
+            initDataFormatters();
+            getData();
+            
         });
-    });
-    $("#configToggleButton").click(function () {
-        $("#configFormDiv").slideToggle("slow");
-    });
-</script>
-<style type='text/css'>
-    #calendar {
-        margin: 0 auto;
-    }
-    
-    <apex:repeat value="{!colors}" var="color">
-    .calcolor-{!color.bg},
-    .fc-agenda .calcolor-{!color.bg} .fc-event-time,
-    .calcolor-{!color.bg} a {
-        background-color: {!color.bg};
-        border-color: {!color.bg};
-        color: {!color.fg};
-    }
-    
-    </apex:repeat>
-    
-    .fc-header-title{
-        font-size:150%;
-    }
-    
-</style>
+        
+        function getData(){
+            Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.CampaignCalendar.getCalendarEntry}', 
+                    function(result, event){
+                         if (event.status) {
+                            $.each(result,function(){
+                                this.start = new Date(this.startDate);
+                                this.end = new Date(this.endDate);
+                            });
+                            initFullCalendar(result);
+                         }
+                         else{
+                            alert(event.message);
+                         } 
+                    }, 
+                    {escape: true}
+                );
+        }
+        
+        function initFullCalendar(calendarEntries){
+            $('#calendarx').fullCalendar({
+                editable: false,
+                events: calendarEntries,
+                eventClick: function(event) {
+                    if (event.url) {
+                        window.open(event.url);
+                        return false;
+                    }
+                },
+                eventRender: function(event, element, view){
+                    element.qtip({ 
+                        position: {
+                            corner: { 
+                                target: 'topMiddle', 
+                                tooltip: 'bottomMiddle' 
+                            }
+                        },
+                        style: { 
+                            width: 300,
+                            color: 'black',
+                            name: 'light'
+                        },
+                        content: $("#qtipTemplate").render(event.campaign)
+                    });
+                }
+            });
+        }
+        
+        function normalizeDate(mydate){
+           mydate = new Date(mydate );
+           mydate = new Date(mydate - mydate.getTimezoneOffset() * 60000);
+           return mydate;
+       }
+       
+       function initDataFormatters(){
+           $.views.helpers({
+               formatData: function (data,formatType,fieldPath) {
+                   if (data != null && formatType == 'date') {
+                       data = new Date(data);
+                       data = new Date(data - data.getTimezoneOffset() * 60000);
+                       var d = data.getDate();
+                       var m = data.getMonth()+1;
+                       var y = data.getFullYear();
+                       return y + '-' + (m<=9?'0'+m:m) + '-' + (d<=9?'0'+d:d);
+                   }else{
+                       return data;
+                   }
+               }
+           });
+        }
+        
+        $("#configToggleButton").click(function () {
+            $("#configFormDiv").slideToggle("slow");
+        });
+    </script>
+    <script id="qtipTemplate" type="text/x-jQuery-render">
+       
+        <table width="100%">
+            <apex:repeat value="{!$ObjectType.Campaign.FieldSets.MarketingCalendarPopup}" var="f"> 
+                <tr>
+                    {{if '{!f.FieldPath}' == 'OwnerId'}}
+                         <td><b>Owner</b></td>
+                         <td>{{>Owner.Name}}</td>
+                    {{else}} 
+                        <td><b>{!f.Label}</b></td>
+                        <td class="{!f.FieldPath}" >
+                            {{:~formatData({!f.FieldPath},'{!f.type}','{!f.FieldPath}')}} 
+                        </td>
+                    {{/if}}
+                </tr>
+            </apex:repeat>
+        </table>
+    </script>
+    <style type='text/css'>
+        #calendar {
+            margin: 0 auto;
+        }
+        
+        <apex:repeat value="{!colors}" var="color">
+            .calcolor-{!color.bg},
+            .fc-agenda .calcolor-{!color.bg} .fc-event-time,
+            .calcolor-{!color.bg} a {
+                background-color: {!color.bg};
+                border-color: {!color.bg};
+                color: {!color.fg};
+            }
+        
+        </apex:repeat>
+        
+        .fc-header-title{
+            font-size:150%;
+        }
+        
+        .pgImg{
+              vertical-align:middle;
+              padding-right:3px;    
+            }
+        
+    </style>
 
-<div id='calendarx'></div>
+    <div id='calendarx'></div>
 
-<div>
-    <apex:outputLink value="http://www.cambridgecloudpartners.com" id="poweredByLink" target="_blank">
-        <apex:image url="{!URLFOR($Resource.FullCalendar, 'images/poweredby.gif')}" width="401" height="44" />
-    </apex:outputLink>
-</div>
+    <div>
+        <apex:outputLink value="http://www.cambridgecloudpartners.com" id="poweredByLink" target="_blank">
+            <apex:image url="{!URLFOR($Resource.FullCalendar, 'poweredby.gif')}" width="401" height="44" />
+        </apex:outputLink>
+    </div>
 
 </apex:page>
