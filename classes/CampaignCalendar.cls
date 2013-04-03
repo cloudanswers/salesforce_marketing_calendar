@@ -18,8 +18,10 @@ public with sharing class CampaignCalendar {
             this.url = '/'+campaign.Id;
             
             // Date() in javascript is datetime, so just passing date means it ends up in yesterday (when you're in american time zones)
-            this.startDate = '' + this.campaign.StartDate.year() + '-' + this.campaign.StartDate.month() + '-' + this.campaign.StartDate.day();
-            this.endDate = '' + this.campaign.EndDate.year() + '-' + this.campaign.EndDate.month() + '-' + this.campaign.EndDate.day();
+            if(this.campaign.StartDate != null)
+            	this.startDate = '' + this.campaign.StartDate.year() + '-' + this.campaign.StartDate.month() + '-' + this.campaign.StartDate.day();
+            if(this.campaign.EndDate != null)
+            	this.endDate = '' + this.campaign.EndDate.year() + '-' + this.campaign.EndDate.month() + '-' + this.campaign.EndDate.day();
 
             if(campaign.Color_Status__c == null || campaign.Color_Status__c == 'null' || campaign.Color_Status__c == ''){
                 campaign.Color_Status__c = 'blue';
@@ -129,12 +131,19 @@ public with sharing class CampaignCalendar {
             }
             campaigns.add(campaign);
         }
+        
+        // different combinations to null dates
+        campaigns[5].StartDate = null;
+        campaigns[6].StartDate = null;
+        campaigns[6].EndDate = null;
+        campaigns[7].EndDate = null;
+        
         insert campaigns;
         
         Test.startTest();
             CampaignCalendar cc = new CampaignCalendar();
             System.assertNotEquals(null,cc.getColors());
-            System.assertEquals(campaigns.size(),CampaignCalendar.getCalendarEntry().size());
+            System.assertEquals(campaigns.size()-2,CampaignCalendar.getCalendarEntry().size());
         Test.stopTest();
     }
     
