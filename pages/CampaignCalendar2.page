@@ -151,7 +151,7 @@
 
     <div>
         <apex:outputLink value="http://www.cambridgecloudpartners.com" id="poweredByLink" target="_blank">
-            <apex:image url="{!URLFOR($Resource.FullCalendar, 'images/poweredby.gif')}" width="401" height="44" />
+            <apex:image url="{!URLFOR($Resource.FullCalendar, 'poweredby.gif')}" width="401" height="44" />
         </apex:outputLink>
     </div>
 
