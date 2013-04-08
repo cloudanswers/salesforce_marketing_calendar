@@ -4,32 +4,39 @@ FullCalendar.resource is a zip file containing the open source jquery and fullca
 Copyright (c) 2011 James Sullivan, Cambridge Cloud Partners
 */
 public with sharing class CampaignCalendar {
-	public class CalendarEntry{
+    public class CalendarEntry{
         public Campaign campaign;
         public String className;
         public String title;
         public String url;
+        /*
         public String startDate;
         public String endDate;
+        */
+        public Date startDate;
+        public Date endDate;
         public Boolean  allDay = true;
         public CalendarEntry(Campaign campaign){
             this.campaign = campaign;
             this.title = campaign.Name;
             this.url = '/'+campaign.Id;
-            
+            /*
             // Date() in javascript is datetime, so just passing date means it ends up in yesterday (when you're in american time zones)
             if(this.campaign.StartDate != null)
-            	this.startDate = '' + this.campaign.StartDate.year() + '-' + this.campaign.StartDate.month() + '-' + this.campaign.StartDate.day();
+                this.startDate = '' + this.campaign.StartDate.year() + '-' + this.campaign.StartDate.month() + '-' + this.campaign.StartDate.day();
             if(this.campaign.EndDate != null)
-            	this.endDate = '' + this.campaign.EndDate.year() + '-' + this.campaign.EndDate.month() + '-' + this.campaign.EndDate.day();
-
+                this.endDate = '' + this.campaign.EndDate.year() + '-' + this.campaign.EndDate.month() + '-' + this.campaign.EndDate.day();
+            */
+            TimeZone tz = UserInfo.getTimeZone();
+            this.startDate = this.campaign.StartDate;
+            this.endDate = this.campaign.endDate;
             if(campaign.Color_Status__c == null || campaign.Color_Status__c == 'null' || campaign.Color_Status__c == ''){
                 campaign.Color_Status__c = 'blue';
             }
             className = 'calcolor-'+campaign.Color_Status__c.toLowerCase();
         }
     }
-	
+    
     // taken from w3c web colors
     public static final Map<String,String> colors = new Map<String,String>{
         'maroon' => 'white',
@@ -113,6 +120,8 @@ public with sharing class CampaignCalendar {
         query = (whereClause !=null && whereClause!='') ? query +' WHERE ' +whereClause : query;
         return Database.query(query);
     }
+    
+   
     
     static testMethod void testController(){
         List<Campaign> campaigns = new List<Campaign>();

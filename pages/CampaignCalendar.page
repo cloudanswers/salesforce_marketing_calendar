@@ -26,8 +26,8 @@
                     function(result, event){
                          if (event.status) {
                             $.each(result,function(){
-                                this.start = new Date(this.startDate);
-                                this.end = new Date(this.endDate);
+                                this.start = removeGMTOffset(this.startDate);
+                                this.end = removeGMTOffset(this.endDate);
                             });
                             initFullCalendar(result);
                          }
@@ -68,18 +68,13 @@
             });
         }
         
-        function normalizeDate(mydate){
-           mydate = new Date(mydate );
-           mydate = new Date(mydate - mydate.getTimezoneOffset() * 60000);
-           return mydate;
-       }
        
        function initDataFormatters(){
            $.views.helpers({
                formatData: function (data,formatType,fieldPath) {
+                  
                    if (data != null && formatType == 'date') {
-                       data = new Date(data);
-                       data = new Date(data - data.getTimezoneOffset() * 60000);
+                       data = removeGMTOffset(data);
                        var d = data.getDate();
                        var m = data.getMonth()+1;
                        var y = data.getFullYear();
@@ -89,6 +84,13 @@
                    }
                }
            });
+        }
+        
+        function removeGMTOffset(data){
+            var ms = data;
+            nDate = new Date(data);
+            data = new Date(ms + (nDate.getTimezoneOffset() * 60000));
+            return data;
         }
         
         $("#configToggleButton").click(function () {
