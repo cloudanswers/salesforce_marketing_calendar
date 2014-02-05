@@ -47,8 +47,16 @@ public with sharing class CampaignCalendar {
         'black' => 'white',
         'blue' => 'white',
         'olive' => 'white',
-        'gray' => 'white',
-        
+        'gray' => 'white',        
+        'deepskyblue' => 'white',        
+        'darksalmon' => 'white',        
+        'forestgreen' => 'white',
+        'palvioletred' => 'white',        
+        'powederblue' => 'white',
+        'tomato' => 'white',
+        'saddlebrown' => 'white',        
+                
+        'moccasin' => 'black',
         'orange' => 'black',
         'red' => 'black',
         'fuchsia' => 'black',
