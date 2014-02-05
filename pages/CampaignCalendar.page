@@ -1,4 +1,4 @@
-<apex:page controller="CampaignCalendar" cache="false" tabstyle="Campaign">
+<apex:page controller="CampaignCalendar" cache="false">
 
     
 
@@ -52,6 +52,7 @@
         }
         
         function initFullCalendar(calendarEntries){
+            $('#calendarx').empty();
             $('#calendarx').fullCalendar({
                 editable: false,
                 events: calendarEntries,
