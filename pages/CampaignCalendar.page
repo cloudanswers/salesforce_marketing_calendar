@@ -1,8 +1,6 @@
 <apex:page controller="CampaignCalendar" cache="false" tabstyle="Campaign">
 
-    <apex:sectionHeader subTitle="Marketing Calendar" />
     
-    <br/>
 
     <apex:stylesheet value="{!URLFOR($Resource.FullCalendar, 'fullcalendar.css')}"/>
     <apex:includeScript value="{!URLFOR($Resource.FullCalendar, 'jquery/jquery.js')}"/>
@@ -20,9 +18,23 @@
             
         });
         
-        function getData(){
-            Visualforce.remoting.Manager.invokeAction(
+        function filterData(){
+            getData($('#parentCampaign').val(),$('.campaignType').val());
+        }
+        
+        function getData(parentCampaignId,status){
+            
+            if(parentCampaignId == null){
+                parentCampaignId = '';
+            }
+            
+            if(status == null){
+                status = '';
+            }
+            
+            Visualforce.remoting.Manager.invokeAction(                    
                     '{!$RemoteAction.CampaignCalendar.getCalendarEntry}', 
+                    parentCampaignId,status,
                     function(result, event){
                          if (event.status) {
                             $.each(result,function(){
@@ -135,19 +147,69 @@
             font-size:150%;
         }
         
-        .pgImg{
-              vertical-align:middle;
-              padding-right:3px;    
-            }
+        #calendarx{
+            background-color: #fff;
+            border-width: 1px;
+            border-color:#ddd;
+            padding:10px;
+            box-shadow: none;
+            border-style:solid;
+            border-radius: 4px 4px;
+            margin-top:15px;
+
+        }
         
+        .filterBox {
+            margin-top:5px;
+            background-color: #fff;
+            border-width: 1px;
+            border-color:#ddd;
+            padding:5px;
+            box-shadow: none;
+            border-style:solid;
+            border-radius: 4px 4px;
+            float:right;
+            background: linear-gradient(#E5F2F6,#CDE8F0);
+            -moz-box-shadow: 0 3px 5px hsla(100,0%,0%,.3);
+            -webkit-box-shadow: 0 3px 5px hsla(100,0%,0%,.3);
+            box-shadow: 0 3px 5px hsla(100,0%,0%,.3);
+           
+        }
+        
+        .filterBoxTitle{
+            position:absolute;
+            color:#808080;
+            font-weight:bold;
+            
+        }
+
     </style>
-
-    <div id='calendarx'></div>
-
-    <div>
-        <apex:outputLink value="http://www.cambridgecloudpartners.com" id="poweredByLink" target="_blank">
-            <apex:image url="{!URLFOR($Resource.FullCalendar, 'poweredby.gif')}" width="401" height="44" />
-        </apex:outputLink>
-    </div>
-
+    <apex:form >
+        <div style="float:left">
+            <apex:sectionHeader title="Marketing Calendar"/>
+        </div>
+        <div class="filterBox">
+            <span class="filterBoxTitle">FILTERS</span>
+            <div style="margin-top:5px;padding:10px;">
+                <b>Parent Campaign</b>
+                <select id="parentCampaign" onchange="filterData()">        
+                    <apex:repeat value="{!ActiveParentCampaigns}" var="so">
+                        <option value="{!so.value}">{!so.label}</option>
+                    </apex:repeat>        
+                </select>
+                <b>Campaign Type</b>
+                <apex:inputField styleClass="campaignType" value="{!campaignObj.Type}" onchange="filterData()"/>
+            </div>
+        </div>
+        <div style="clear:both"/>
+        <br/>
+        
+        <div id='calendarx'></div>
+    
+        <div>
+            <apex:outputLink value="http://www.cambridgecloudpartners.com" id="poweredByLink" target="_blank">
+                <apex:image url="{!URLFOR($Resource.FullCalendar, 'poweredby.gif')}" width="401" height="44" />
+            </apex:outputLink>
+        </div>
+    </apex:form>
 </apex:page>
