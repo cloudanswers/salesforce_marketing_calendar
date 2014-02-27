@@ -1,20 +1,24 @@
-<apex:page controller="CampaignCalendar" cache="false">
+<apex:page controller="CampaignCalendar" cache="false" >
 
     
 
     <apex:stylesheet value="{!URLFOR($Resource.FullCalendar, 'fullcalendar.css')}"/>
-    <apex:includeScript value="{!URLFOR($Resource.FullCalendar, 'jquery/jquery.js')}"/>
-    <apex:includeScript value="{!URLFOR($Resource.FullCalendar, 'jquery/ui.core.js')}"/>
-    <apex:includeScript value="{!URLFOR($Resource.FullCalendar, 'jquery/ui.draggable.js')}"/>
-    <apex:includeScript value="{!URLFOR($Resource.FullCalendar, 'jquery/ui.resizable.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.FullCalendar, 'jquery.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.FullCalendar, 'jquery-ui.min.js')}"/>
     <apex:includeScript value="{!URLFOR($Resource.FullCalendar, 'fullcalendar.min.js')}"/>
-    <apex:includeScript value="{!URLFOR($Resource.FullCalendar, 'jsrender.js')}"/>
-    <apex:includeScript value="{!URLFOR($Resource.FullCalendar, 'jquery.qtip-1.0.0-rc3.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.FullCalendar, 'jsrender.js')}"/>    
+    <apex:includeScript value="{!URLFOR($Resource.FullCalendar, 'jquery.qtip.js')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.FullCalendar, 'jquery.qtip.css')}"/>
+    
+    <apex:includeScript value="{!URLFOR($Resource.FullCalendar, 'select2.js')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.FullCalendar, 'select2.css')}"/>
+    
 
     <script type='text/javascript'>
         $(document).ready(function() {
             initDataFormatters();
             getData();
+            $('.combo').select2({width: 'resolve'});
             
         });
         
@@ -63,12 +67,10 @@
                     }
                 },
                 eventRender: function(event, element, view){
+                    
                     element.qtip({ 
                         position: {
-                            corner: { 
-                                target: 'topMiddle', 
-                                tooltip: 'bottomMiddle' 
-                            }
+                            target: 'mouse'
                         },
                         style: { 
                             width: 300,
@@ -77,6 +79,7 @@
                         },
                         content: $("#qtipTemplate").render(event.campaign)
                     });
+                    
                 }
             });
         }
@@ -193,13 +196,13 @@
             <span class="filterBoxTitle">FILTERS</span>
             <div style="margin-top:5px;padding:10px;">
                 <b>Parent Campaign</b>
-                <select id="parentCampaign" onchange="filterData()">        
+                <select id="parentCampaign" onchange="filterData()" class="combo">        
                     <apex:repeat value="{!ActiveParentCampaigns}" var="so">
                         <option value="{!so.value}">{!so.label}</option>
                     </apex:repeat>        
                 </select>
                 <b>Campaign Type</b>
-                <apex:inputField styleClass="campaignType" value="{!campaignObj.Type}" onchange="filterData()"/>
+                <apex:inputField styleClass="campaignType combo" value="{!campaignObj.Type}" onchange="filterData()"/>
             </div>
         </div>
         <div style="clear:both"/>
