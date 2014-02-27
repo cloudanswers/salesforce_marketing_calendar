@@ -1,0 +1,35 @@
+<project basedir="." xmlns:sf="antlib:com.salesforce">
+
+    <taskdef resource="com/salesforce/antlib.xml"
+             classPath="lib/ant-salesforce.jar"
+             uri="antlib:com.salesforce"/>
+
+    <property environment="env"/>
+
+    <target name="deploy" description="Deploys the code to salesforce.com">
+        <echo message="Deploying to Salesforce..."/>
+        <sf:deploy username="${env.SALESFORCE_USERNAME}"
+                   password="${env.SALESFORCE_PASSWORD}"
+                   serverurl="${env.SALESFORCE_URL}"
+                   deployRoot="src"/>
+    </target>
+
+    <target name="test" description="Test without saving to salesforce">
+        <echo message="user: ${env.SALESFORCE_USERNAME}  pass: ${env.SALESFORCE_PASSWORD}  url:  ${env.SALESFORCE_URL}"/>
+        <echo message="Testing deployment..."/>
+        <sf:deploy username="${env.SALESFORCE_USERNAME}"
+                   password="${env.SALESFORCE_PASSWORD}"
+                   serverurl="${env.SALESFORCE_URL}"
+                   deployRoot="src"
+                   checkOnly="true"/>
+    </target>
+
+    <target name="refresh" description="Refresh from org">
+        <sf:retrieve username="${env.SALESFORCE_USERNAME}"
+                     password="${env.SALESFORCE_PASSWORD}"
+                     serverurl="${env.SALESFORCE_URL}"
+                     deployRoot="src"
+                     unpackaged="${env.DEPLOYROOT}/package.xml"/>
+    </target>
+
+</project>
