@@ -21,6 +21,11 @@
         <name>CustomField</name>
     </types>
     <types>
+        <members>Campaign.MarketingCalendarEventTitle</members>
+        <members>Campaign.MarketingCalendarPopup</members>
+        <name>FieldSet</name>
+    </types>
+    <types>
         <members>*</members>
         <name>StaticResource</name>
     </types>
