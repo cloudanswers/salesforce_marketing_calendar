@@ -5,6 +5,10 @@ This is a simple app that presents the salesforce Campaign objects in a month-ca
 If you don't need to modify it, you can install it from here for free:
 http://appexchange.salesforce.com/listingDetail?listingId=a0N30000003Io4WEAS
 
+Build status:
+
+[ ![Codeship Status for cloudanswers/salesforce_marketing_calendar](https://www.codeship.io/projects/843df580-8196-0131-b037-26346df4cec6/status?branch=master)](https://www.codeship.io/projects/14725)
+
 ## License
 
 Copyright 2011, James Sullivan, Cambridge Cloud Partners, Inc.
