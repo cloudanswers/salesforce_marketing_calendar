@@ -15,7 +15,6 @@
     </target>
 
     <target name="test" description="Test without saving to salesforce">
-        <echo message="user: ${env.SALESFORCE_USERNAME}  pass: ${env.SALESFORCE_PASSWORD}  url:  ${env.SALESFORCE_URL}"/>
         <echo message="Testing deployment..."/>
         <sf:deploy username="${env.SALESFORCE_USERNAME}"
                    password="${env.SALESFORCE_PASSWORD}"

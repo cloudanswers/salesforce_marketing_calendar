@@ -146,13 +146,13 @@ public with sharing class CampaignCalendar {
             }
         }
         
-        for(Schema.FieldSetMember f : SObjectType.Campaign.FieldSets.marketing_cal__MarketingCalendarPopup.getFields()) {
+        for(Schema.FieldSetMember f : SObjectType.Campaign.FieldSets.MarketingCalendarPopup.getFields()) {
             if(!fields.contains(f.getFieldPath().toLowerCase())){
                 query = query+','+f.getFieldPath().toLowerCase();
             }
         }
         
-        for(Schema.FieldSetMember f : SObjectType.Campaign.FieldSets.marketing_cal__MarketingCalendarEventTitle.getFields()) {
+        for(Schema.FieldSetMember f : SObjectType.Campaign.FieldSets.MarketingCalendarEventTitle.getFields()) {
             if(!fields.contains(f.getFieldPath().toLowerCase())){
                 query = query+','+f.getFieldPath().toLowerCase();
             }
@@ -166,7 +166,7 @@ public with sharing class CampaignCalendar {
     private static String getCalendarTitleFieldValue(Campaign c){
        
         if(titleFieldAPI == NULL){
-            for(Schema.FieldSetMember f : SObjectType.Campaign.FieldSets.marketing_cal__MarketingCalendarEventTitle.getFields()) {
+            for(Schema.FieldSetMember f : SObjectType.Campaign.FieldSets.MarketingCalendarEventTitle.getFields()) {
                 titleFieldAPI = f.getFieldPath();
                 break; //take the first field
             }
