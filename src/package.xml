@@ -17,6 +17,10 @@
         <name>ApexTrigger</name>
     </types>
     <types>
+        <members>Campaign.Color_Status__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
         <members>*</members>
         <name>StaticResource</name>
     </types>
