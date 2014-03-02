@@ -95,7 +95,7 @@ public with sharing class CampaignCalendar {
             }
         }
         
-        for(Campaign cn : [SELECT Id,Name FROM Campaign WHERE Id=:campaignSet]){
+        for(Campaign cn : [SELECT Id,Name FROM Campaign WHERE Id=:campaignSet ORDER BY Name]){
             SelectOptions.add(new SelectOption(cn.Id, cn.Name));
         }
         return SelectOptions;
