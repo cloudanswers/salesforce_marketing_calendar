@@ -70,7 +70,10 @@
                     
                     element.qtip({ 
                         position: {
-                            target: 'mouse'
+                            target: 'mouse',
+                            adjust: {
+                                 x: 4
+                             } 
                         },
                         style: { 
                             width: 300,
