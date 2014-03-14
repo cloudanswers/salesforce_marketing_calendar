@@ -32,7 +32,7 @@ public with sharing class CampaignCalendar {
             */
             TimeZone tz = UserInfo.getTimeZone();
             this.startDate = this.campaign.StartDate;
-            this.endDate = this.campaign.endDate;
+            this.endDate = this.campaign.endDate == NULL ? this.campaign.StartDate : this.campaign.endDate;
             if(campaign.Color_Status__c == null || campaign.Color_Status__c == 'null' || campaign.Color_Status__c == ''){
                 campaign.Color_Status__c = 'blue';
             }
