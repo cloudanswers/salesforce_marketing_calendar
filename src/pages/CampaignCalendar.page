@@ -23,11 +23,10 @@
         });
         
         function filterData(){
-            getData($('#parentCampaign').val(),$('.campaignType').val());
+            getData($('#parentCampaign').val(),$('select.campaignType').val());
         }
         
         function getData(parentCampaignId,status){
-            
             if(parentCampaignId == null){
                 parentCampaignId = '';
             }
@@ -70,7 +69,8 @@
                     
                     element.qtip({ 
                         position: {
-                            target: 'mouse'
+                            my: 'top left',  
+                            at: 'bottom center'
                         },
                         style: { 
                             width: 300,
