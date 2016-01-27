@@ -1,12 +1,13 @@
 ({
 	doInit : function(helper,component) {
-		var action = component.get("c.queryX");
-		action.setParams({"query":"SELECT Id,Name,StartDate,EndDate FROM Campaign WHERE StartDate != NULL"});
+		var action = component.get("c.getCalendarEntryAura");
+		action.setParams({"parentCampaignId":"","type" : ""});
 		action.setCallback(this, function(response){
 			console.log('response',response);
 			if (response.getState() === "SUCCESS") {
-                component.set('v.campaigns',response.getReturnValue());
-				helper.initCalendar(helper.parseCampaigns(response.getReturnValue()));
+                //component.set('v.campaigns',response.getReturnValue());
+				helper.initCalendar(helper.parseEnteries(response.getReturnValue()));
+				console.log(response.getReturnValue());
 			}
 			else{
 				var error = helper.parseErrors(response.getError());
@@ -25,6 +26,13 @@
 			});
 		}
 		return enteries;
+	},
+	parseEnteries : function(results){
+		for(var i =0 ;i < results.length; i++){
+			results[i].start = new Date(results[i].startDate);
+			results[i].end = new Date(results[i].endDate);
+		}
+		return results;
 	},
 	initCalendar : function(calendarEntries){
 		console.log(calendarEntries);
