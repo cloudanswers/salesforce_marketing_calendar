@@ -1,0 +1,11 @@
+<aura:component controller="CalendarCtrl" implements="force:appHostable,flexipage:availableForAllPageTypes">
+    <ltng:require styles="/resource/fullcalendarx/fullcalendar.min.css"
+        scripts="/resource/fullcalendarx/lib/jquery.min.js,
+            /resource/fullcalendarx/lib/jquery-ui.custom.min.js,
+            /resource/fullcalendarx/lib/moment.min.js,
+            /resource/fullcalendarx/fullcalendar.min.js"
+        afterScriptsLoaded="{!c.doInit}" />
+
+        <div id="calendarX"></div>
+
+</aura:component>

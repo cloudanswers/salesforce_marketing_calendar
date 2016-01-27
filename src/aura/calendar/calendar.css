@@ -1,0 +1,10 @@
+.THIS #calendarX{
+    background-color: #fff;
+    border-width: 1px;
+    border-color:#ddd;
+    padding:10px;
+    box-shadow: none;
+    border-style:solid;
+    border-radius: 4px 4px;
+    margin-top:15px;
+}
