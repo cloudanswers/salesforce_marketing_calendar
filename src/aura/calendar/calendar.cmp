@@ -1,11 +1,13 @@
 <aura:component controller="CampaignCalendar" implements="force:appHostable,flexipage:availableForAllPageTypes">
-    <ltng:require styles="/resource/Fullcalendar/2.6.0/fullcalendar.min.css"
+    <ltng:require
+        styles="/resource/Fullcalendar/2.6.0/fullcalendar.min.css
+            ,/resource/Fullcalendar/jquery.qtip.css"
         scripts="/resource/Fullcalendar/2.6.0/lib/jquery.min.js,
             /resource/Fullcalendar/2.6.0/lib/jquery-ui.custom.min.js,
             /resource/Fullcalendar/2.6.0/lib/moment.min.js,
-            /resource/Fullcalendar/2.6.0/fullcalendar.min.js"
+            /resource/Fullcalendar/2.6.0/fullcalendar.min.js,
+            /resource/Fullcalendar/jquery.qtip.js"
         afterScriptsLoaded="{!c.doInit}" />
 
         <div id="calendarX"></div>
-
 </aura:component>

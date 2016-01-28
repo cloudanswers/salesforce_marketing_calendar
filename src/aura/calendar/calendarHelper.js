@@ -3,7 +3,6 @@
 		var action = component.get("c.getCalendarEntryAura");
 		action.setParams({"parentCampaignId":"","type" : ""});
 		action.setCallback(this, function(response){
-			console.log('response',response);
 			if (response.getState() === "SUCCESS") {
                 //component.set('v.campaigns',response.getReturnValue());
 				helper.initCalendar(helper.parseEnteries(response.getReturnValue()));
@@ -14,6 +13,15 @@
 				component.set("v.errors",error);
 			}
 		});
+		$A.enqueueAction(action);
+		helper.describeFieldSet(component,function(response){
+			console.log(response);
+		});
+	},
+	describeFieldSet : function(component,cb){
+		var action = component.get("c.describeFieldSet");
+		action.setParams({"fieldset":"MarketingCalendarPopup"});
+		action.setCallback(this,cb);
 		$A.enqueueAction(action);
 	},
 	parseCampaigns : function(campaigns){
@@ -35,7 +43,6 @@
 		return results;
 	},
 	initCalendar : function(calendarEntries){
-		console.log(calendarEntries);
 		$('#calendarX').empty();
 		$('#calendarX').fullCalendar({
 			editable: false,
@@ -47,7 +54,18 @@
 				}
 			},
 			eventRender: function(event, element, view){
-
+				element.qtip({
+					position: {
+						my: 'top left',
+						at: 'bottom center'
+					},
+					style: {
+						width: 300,
+						color: 'black',
+						name: 'light'
+					},
+					content: 'HAHAHAHAHAH'
+				});
 			}
 		});
 	},

@@ -106,8 +106,11 @@ public with sharing class CampaignCalendar {
     @AuraEnabled
     public List<Campaign> getActiveParentCampaignObjects(){
         Set<Id> campaignSet = new Set<Id>();
-        
-        for(AggregateResult ar : [SELECT ParentId,Count(Id)recordCount FROM Campaign WHERE ParentId !=NULL AND isActive=TRUE WITH SECURITY_ENFORCED GROUP BY ParentId]){
+        for(AggregateResult ar : [
+            SELECT ParentId,Count(Id)recordCount
+            FROM Campaign
+            WHERE ParentId !=NULL AND isActive=TRUE GROUP BY ParentId]
+        ){
             if(ar.get('recordCount') != NULL && Integer.valueOf(ar.get('recordCount')) > 0){
                 campaignSet.add((Id)ar.get('ParentId'));
             }
@@ -117,6 +120,11 @@ public with sharing class CampaignCalendar {
             FROM Campaign
             WHERE Id=:campaignSet ORDER BY Name
         ];
+    }
+
+    @AuraEnabled
+    public static List<Object> describeFieldSet(String fieldset){
+        return (List<Object>)JSON.deserializeUntyped(JSON.serialize(SObjectType.Campaign.FieldSets.getMap().get(fieldset).getFields()));
     }
 
     @RemoteAction
@@ -183,14 +191,9 @@ public with sharing class CampaignCalendar {
                 query = query+','+fs;
             }
         }
-
-        for(Schema.FieldSetMember f : SObjectType.Campaign.FieldSets.MarketingCalendarPopup.getFields()) {
-            if(!fields.contains(f.getFieldPath().toLowerCase())){
-                query = query+','+f.getFieldPath().toLowerCase();
-            }
-        }
-
-        for(Schema.FieldSetMember f : SObjectType.Campaign.FieldSets.MarketingCalendarEventTitle.getFields()) {
+        List<Schema.FieldSetMember> fieldSetMembers = SObjectType.Campaign.FieldSets.MarketingCalendarPopup.getFields();
+        fieldSetMembers.addAll(SObjectType.Campaign.FieldSets.MarketingCalendarEventTitle.getFields());
+        for(Schema.FieldSetMember f : fieldSetMembers) {
             if(!fields.contains(f.getFieldPath().toLowerCase())){
                 query = query+','+f.getFieldPath().toLowerCase();
             }
