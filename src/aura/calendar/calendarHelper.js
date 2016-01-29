@@ -1,26 +1,29 @@
 ({
 	doInit : function(helper,component) {
-		var action = component.get("c.getCalendarEntryAura");
-		action.setParams({"parentCampaignId":"","type" : ""});
-		action.setCallback(this, function(response){
-			if (response.getState() === "SUCCESS") {
-                //component.set('v.campaigns',response.getReturnValue());
-				helper.initCalendar(helper.parseEnteries(response.getReturnValue()));
-				console.log(response.getReturnValue());
-			}
-			else{
-				var error = helper.parseErrors(response.getError());
-				component.set("v.errors",error);
-			}
-		});
-		$A.enqueueAction(action);
-		helper.describeFieldSet(component,function(response){
-			console.log(response);
+
+		helper.describeFieldSet("MarketingCalendarPopup",component,function(r){
+			component.set('v.MarketingCalendarPopupFields',r.getReturnValue());
+			helper.fetchCalendarData(helper,component,function(response){
+				if (response.getState() === "SUCCESS") {
+	                //component.set('v.campaigns',response.getReturnValue());
+					helper.initCalendar(helper,helper.parseEnteries(response.getReturnValue()));
+				}
+				else{
+					var error = helper.parseErrors(response.getError());
+					component.set("v.errors",error);
+				}
+			})
 		});
 	},
-	describeFieldSet : function(component,cb){
+	fetchCalendarData : function(helper,component,cb){
+		var action = component.get("c.getCalendarEntryAura");
+		action.setParams({"parentCampaignId":"","type" : ""});
+		action.setCallback(this,cb);
+		$A.enqueueAction(action);
+	},
+	describeFieldSet : function(fs,component,cb){
 		var action = component.get("c.describeFieldSet");
-		action.setParams({"fieldset":"MarketingCalendarPopup"});
+		action.setParams({"fieldset":fs});
 		action.setCallback(this,cb);
 		$A.enqueueAction(action);
 	},
@@ -42,7 +45,7 @@
 		}
 		return results;
 	},
-	initCalendar : function(calendarEntries){
+	initCalendar : function(helper,calendarEntries){
 		$('#calendarX').empty();
 		$('#calendarX').fullCalendar({
 			editable: false,
@@ -54,6 +57,7 @@
 				}
 			},
 			eventRender: function(event, element, view){
+				console.log($.templates(helper.decodeEntities($("#qtipTemplate").html())),event);
 				element.qtip({
 					position: {
 						my: 'top left',
@@ -64,7 +68,7 @@
 						color: 'black',
 						name: 'light'
 					},
-					content: 'HAHAHAHAHAH'
+					content: $.templates(helper.decodeEntities($("#qtipTemplate").html())).render(event.campaign)
 				});
 			}
 		});
@@ -94,5 +98,10 @@
 			}
 		}
 		return error;
+	},
+	decodeEntities : function(input) {
+	  var y = document.createElement('textarea');
+	  y.innerHTML = input;
+	  return y.value;
 	}
 })

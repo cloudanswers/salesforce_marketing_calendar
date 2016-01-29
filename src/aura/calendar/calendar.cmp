@@ -6,8 +6,28 @@
             /resource/Fullcalendar/2.6.0/lib/jquery-ui.custom.min.js,
             /resource/Fullcalendar/2.6.0/lib/moment.min.js,
             /resource/Fullcalendar/2.6.0/fullcalendar.min.js,
-            /resource/Fullcalendar/jquery.qtip.js"
+            /resource/Fullcalendar/jquery.qtip.js,
+            /resource/Fullcalendar/jsrender.js"
         afterScriptsLoaded="{!c.doInit}" />
 
         <div id="calendarX"></div>
+
+        <div id="qtipTemplate" type="text/x-jQuery-render" style="display:none">
+
+            <table width="100%">
+                <aura:iteration items="{!v.MarketingCalendarPopupFields}" var="f">
+                    <tr>
+                        {{if '{!f.fieldPath}' == 'OwnerId'}}
+                             <td><b>Owner</b></td>
+                             <td>{{>Owner.Name}}</td>
+                        {{else}}
+                            <td><b>{!f.label}</b></td>
+                            <td class="{!f.fieldPath}" >
+
+                            </td>
+                        {{/if}}
+                    </tr>
+                </aura:iteration>
+            </table>
+        </div>
 </aura:component>
