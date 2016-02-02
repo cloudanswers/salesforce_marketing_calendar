@@ -4,6 +4,7 @@
 		helper.describeFieldSet("MarketingCalendarPopup",component,function(r){
 			component.set('v.MarketingCalendarPopupFields',r.getReturnValue());
 			helper.load(helper,component);
+			$('.forceInputPicklist select').removeAttr('disabled'); 
 		});
 	},
 	load : function(helper,component){

@@ -10,6 +10,8 @@
             /resource/Fullcalendar/jsrender.js"
         afterScriptsLoaded="{!c.doInit}" />
 
+        <aura:attribute name="campaignObj" type="Campaign" default="{ sobjectType: 'Campaign' }"/>
+
         <div class="filterBox">
             <span class="filterBoxTitle">FILTERS</span>
             <div style="margin-top:5px;padding:10px;">
@@ -20,9 +22,7 @@
                     </aura:iteration>
                 </select>
                 <b class="label">Campaign Type</b>
-                <!--
-                <apex:inputField styleClass="campaignType combo" value="{!campaignObj.Type}" onchange="filterData()" style="min-width:180px"/>
-                -->
+                <force:inputField value="{!v.campaignObj.Type}" />
             </div>
         </div>
         <div style="clear:both"/>
