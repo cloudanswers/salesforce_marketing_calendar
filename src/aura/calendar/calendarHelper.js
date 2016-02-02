@@ -1,6 +1,5 @@
 ({
 	doInit : function(helper,component) {
-
 		helper.describeFieldSet("MarketingCalendarPopup",component,function(r){
 			component.set('v.MarketingCalendarPopupFields',r.getReturnValue());
 			helper.fetchCalendarData(helper,component,function(response){
@@ -57,7 +56,6 @@
 				}
 			},
 			eventRender: function(event, element, view){
-				console.log($.templates(helper.decodeEntities($("#qtipTemplate").html())),event);
 				element.qtip({
 					position: {
 						my: 'top left',
@@ -103,5 +101,5 @@
 	  var y = document.createElement('textarea');
 	  y.innerHTML = input;
 	  return y.value;
-	}
+  	}
 })

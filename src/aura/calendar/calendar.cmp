@@ -23,7 +23,7 @@
                         {{else}}
                             <td><b>{!f.label}</b></td>
                             <td class="{!f.fieldPath}" >
-
+                                {{>{!f.fieldPath}}} 
                             </td>
                         {{/if}}
                     </tr>
