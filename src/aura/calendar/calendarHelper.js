@@ -1,18 +1,22 @@
 ({
 	doInit : function(helper,component) {
+		helper.getParentCampaigns(component);
 		helper.describeFieldSet("MarketingCalendarPopup",component,function(r){
 			component.set('v.MarketingCalendarPopupFields',r.getReturnValue());
-			helper.fetchCalendarData(helper,component,function(response){
-				if (response.getState() === "SUCCESS") {
-	                //component.set('v.campaigns',response.getReturnValue());
-					helper.initCalendar(helper,helper.parseEnteries(response.getReturnValue()));
-				}
-				else{
-					var error = helper.parseErrors(response.getError());
-					component.set("v.errors",error);
-				}
-			})
+			helper.load(helper,component);
 		});
+	},
+	load : function(helper,component){
+		helper.fetchCalendarData(helper,component,function(response){
+			if (response.getState() === "SUCCESS") {
+				//component.set('v.campaigns',response.getReturnValue());
+				helper.initCalendar(helper,helper.parseEnteries(response.getReturnValue()));
+			}
+			else{
+				var error = helper.parseErrors(response.getError());
+				component.set("v.errors",error);
+			}
+		})
 	},
 	fetchCalendarData : function(helper,component,cb){
 		var action = component.get("c.getCalendarEntryAura");
@@ -101,5 +105,14 @@
 	  var y = document.createElement('textarea');
 	  y.innerHTML = input;
 	  return y.value;
-  	}
+  },
+  getParentCampaigns : function(component){
+	  var action = component.get("c.getActiveParentCampaignObjects");
+	  action.setParams({});
+	  action.setCallback(this,function(response){
+		  console.log(response,response.getReturnValue());
+		  component.set("v.parentCampaigns",response.getReturnValue());
+	  });
+	  $A.enqueueAction(action);
+  }
 })

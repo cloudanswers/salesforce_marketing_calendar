@@ -10,6 +10,23 @@
             /resource/Fullcalendar/jsrender.js"
         afterScriptsLoaded="{!c.doInit}" />
 
+        <div class="filterBox">
+            <span class="filterBoxTitle">FILTERS</span>
+            <div style="margin-top:5px;padding:10px;">
+                <b class="label">Parent Campaign</b>
+                <select id="parentCampaign" class="combo" style="min-width:240px">
+                    <aura:iteration items="{!v.parentCampaigns}" var="p">
+                        <option value="{!p.Id}">{!p.Name}</option>
+                    </aura:iteration>
+                </select>
+                <b class="label">Campaign Type</b>
+                <!--
+                <apex:inputField styleClass="campaignType combo" value="{!campaignObj.Type}" onchange="filterData()" style="min-width:180px"/>
+                -->
+            </div>
+        </div>
+        <div style="clear:both"/>
+        <br/>
         <div id="calendarX"></div>
 
         <div id="qtipTemplate" type="text/x-jQuery-render" style="display:none">
@@ -23,7 +40,7 @@
                         {{else}}
                             <td><b>{!f.label}</b></td>
                             <td class="{!f.fieldPath}" >
-                                {{>{!f.fieldPath}}} 
+                                {{>{!f.fieldPath}}}
                             </td>
                         {{/if}}
                     </tr>

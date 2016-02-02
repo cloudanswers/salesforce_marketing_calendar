@@ -8,3 +8,35 @@
     border-radius: 4px 4px;
     margin-top:15px;
 }
+
+.THIS .filterBox {
+    margin-top:5px;
+    background-color: #fff;
+    border-width: 1px;
+    border-color:#ddd;
+    padding:5px;
+    box-shadow: none;
+    border-style:solid;
+    border-radius: 4px 4px;
+    float:right;
+    background: linear-gradient(#E5F2F6,#CDE8F0);
+    -moz-box-shadow: 0 3px 5px hsla(100,0%,0%,.3);
+    -webkit-box-shadow: 0 3px 5px hsla(100,0%,0%,.3);
+    box-shadow: 0 3px 5px hsla(100,0%,0%,.3);
+
+}
+
+.THIS .filterBoxTitle{
+    position:absolute;
+    color:#808080;
+    font-weight:bold;
+
+}
+
+.THIS .label{
+    margin-left:8px;
+}
+
+.THIS .combo{
+    margin-left:4px;
+}
