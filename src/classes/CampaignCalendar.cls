@@ -104,7 +104,7 @@ public with sharing class CampaignCalendar {
     }
 
     @AuraEnabled
-    public List<Campaign> getActiveParentCampaignObjects(){
+    public static List<Campaign> getActiveParentCampaignObjects(){
         Set<Id> campaignSet = new Set<Id>();
         for(AggregateResult ar : [
             SELECT ParentId,Count(Id)recordCount

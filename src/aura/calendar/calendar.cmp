@@ -1,28 +1,40 @@
 <aura:component controller="CampaignCalendar" implements="force:appHostable,flexipage:availableForAllPageTypes">
     <ltng:require
-        styles="/resource/Fullcalendar/2.6.0/fullcalendar.min.css
-            ,/resource/Fullcalendar/jquery.qtip.css"
+        styles="/resource/Fullcalendar/2.6.0/fullcalendar.min.css,
+            /resource/Fullcalendar/jquery.qtip.css,
+            /resource/Fullcalendar/select2.css"
         scripts="/resource/Fullcalendar/2.6.0/lib/jquery.min.js,
             /resource/Fullcalendar/2.6.0/lib/jquery-ui.custom.min.js,
             /resource/Fullcalendar/2.6.0/lib/moment.min.js,
             /resource/Fullcalendar/2.6.0/fullcalendar.min.js,
             /resource/Fullcalendar/jquery.qtip.js,
-            /resource/Fullcalendar/jsrender.js"
+            /resource/Fullcalendar/jsrender.js,
+            /resource/Fullcalendar/select2.js"
         afterScriptsLoaded="{!c.doInit}" />
 
-        <aura:attribute name="campaignObj" type="Campaign" default="{ sobjectType: 'Campaign' }"/>
-
+    <aura:attribute name="campaignObj" type="Campaign" default="{ sobjectType: 'Campaign' }"/>
+    <div>
         <div class="filterBox">
             <span class="filterBoxTitle">FILTERS</span>
             <div style="margin-top:5px;padding:10px;">
-                <b class="label">Parent Campaign</b>
-                <select id="parentCampaign" class="combo" style="min-width:240px">
-                    <aura:iteration items="{!v.parentCampaigns}" var="p">
-                        <option value="{!p.Id}">{!p.Name}</option>
-                    </aura:iteration>
-                </select>
-                <b class="label">Campaign Type</b>
-                <force:inputField value="{!v.campaignObj.Type}" />
+                <div id="filter-elem-1">
+                    <b class="label">Parent Campaign</b>
+                    <div class="filter">
+                        <select id="parentCampaign" class="combo" style="min-width:240px">
+                            <option value="--None--">--None--</option>
+                            <aura:iteration items="{!v.parentCampaigns}" var="p">
+                                <option value="{!p.Id}">{!p.Name}</option>
+                            </aura:iteration>
+                        </select>
+                    </div>
+                </div>
+                <div id="filter-elem-2">
+                    <b class="label">Campaign Type</b>
+                    <div class="filter">
+                        <force:inputField value="{!v.campaignObj.Type}" />
+                    </div>
+                </div>
+                <div style="clear:both"/>
             </div>
         </div>
         <div style="clear:both"/>
@@ -47,4 +59,5 @@
                 </aura:iteration>
             </table>
         </div>
+    </div>
 </aura:component>

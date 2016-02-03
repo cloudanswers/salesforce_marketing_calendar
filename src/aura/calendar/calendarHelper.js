@@ -1,14 +1,18 @@
 ({
 	doInit : function(helper,component) {
+		var me = this;
 		helper.getParentCampaigns(component);
 		helper.describeFieldSet("MarketingCalendarPopup",component,function(r){
 			component.set('v.MarketingCalendarPopupFields',r.getReturnValue());
-			helper.load(helper,component);
-			$('.forceInputPicklist select').removeAttr('disabled'); 
+			helper.load(helper,component,"","");
+			$('.forceInputPicklist select').removeAttr('disabled');
+			$('select').select2({width: 'resolve'}).on('change',function(){
+				helper.load(helper,component,$('#parentCampaign').val(),$('.forceInputPicklist select').val());
+			});
 		});
 	},
-	load : function(helper,component){
-		helper.fetchCalendarData(helper,component,function(response){
+	load : function(helper,component,parentCampaignId,type){
+		helper.fetchCalendarData(helper,component,parentCampaignId,type,function(response){
 			if (response.getState() === "SUCCESS") {
 				//component.set('v.campaigns',response.getReturnValue());
 				helper.initCalendar(helper,helper.parseEnteries(response.getReturnValue()));
@@ -19,10 +23,12 @@
 			}
 		})
 	},
-	fetchCalendarData : function(helper,component,cb){
+	fetchCalendarData : function(helper,component,parentCampaignId,type,cb){
+		parentCampaignId = (parentCampaignId == '--None--' ? '' : parentCampaignId);
+		type = (type == '--None--' ? '' : type);
 		var action = component.get("c.getCalendarEntryAura");
-		action.setParams({"parentCampaignId":"","type" : ""});
-		action.setCallback(this,cb);
+		action.setParams({"parentCampaignId":parentCampaignId,"type" : type});
+		action.setCallback(helper,cb);
 		$A.enqueueAction(action);
 	},
 	describeFieldSet : function(fs,component,cb){
@@ -50,6 +56,7 @@
 		return results;
 	},
 	initCalendar : function(helper,calendarEntries){
+		console.log(calendarEntries);
 		$('#calendarX').empty();
 		$('#calendarX').fullCalendar({
 			editable: false,
@@ -88,12 +95,13 @@
 		}
 	},
 	parseErrors : function(errorObj){
+		console.log('error',errorObj);
 		var error = [];
 		for(var i = 0; i < errorObj.length > 0; i ++){
 			if(errorObj[i].pageErrors){
 				error = error.concat(errorObj[i].pageErrors);
 			}
-			console.log('error',error);
+
 			if(errorObj[i].fieldErrors){
 				for(f in errorObj[i].fieldErrors){
 					error = errorObj[i].fieldErrors[f].concat(errorObj[i].pageErrors);
@@ -111,7 +119,6 @@
 	  var action = component.get("c.getActiveParentCampaignObjects");
 	  action.setParams({});
 	  action.setCallback(this,function(response){
-		  console.log(response,response.getReturnValue());
 		  component.set("v.parentCampaigns",response.getReturnValue());
 	  });
 	  $A.enqueueAction(action);
