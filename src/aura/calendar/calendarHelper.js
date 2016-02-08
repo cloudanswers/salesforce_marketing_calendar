@@ -57,7 +57,7 @@
 	},
 	initCalendar : function(helper,calendarEntries){
 		console.log(calendarEntries);
-		$('#calendarX').empty();
+		$('#calendarX').fullCalendar('destroy');
 		$('#calendarX').fullCalendar({
 			editable: false,
 			events: calendarEntries,
