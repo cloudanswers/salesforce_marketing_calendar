@@ -60,10 +60,13 @@
                 editable: false,
                 events: calendarEntries,
                 eventClick: function(event) {
-                    if (event.url) {
-                        window.open(event.url);
-                        return false;
+                    if (!event.url) return;
+                    if (typeof(sforce) != "undefined") {
+                      sforce.one.navigateToSObject(event.id);
+                    } else {
+                      window.open(event.url);
                     }
+                    return false;
                 },
                 eventRender: function(event, element, view){
                     
@@ -219,8 +222,8 @@
         <div id='calendarx'></div>
     
         <div>
-            <apex:outputLink value="http://www.cambridgecloudpartners.com" id="poweredByLink" target="_blank">
-                <apex:image url="{!URLFOR($Resource.FullCalendar, 'poweredby.gif')}" width="401" height="44" />
+            <apex:outputLink value="http://www.cloudanswers.com" id="poweredByLink" target="_blank">
+                <apex:image url="{!URLFOR($Resource.FullCalendar, 'poweredby.png')}" width="293" height="44" />
             </apex:outputLink>
         </div>
     </apex:form>

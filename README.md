@@ -7,7 +7,7 @@ http://appexchange.salesforce.com/listingDetail?listingId=a0N30000003Io4WEAS
 
 Build status:
 
-[ ![Codeship Status for cloudanswers/salesforce_marketing_calendar](https://www.codeship.io/projects/843df580-8196-0131-b037-26346df4cec6/status?branch=master)](https://www.codeship.io/projects/14725)
+[ ![Codeship Status for cloudanswers/salesforce_marketing_calendar](https://app.codeship.com/projects/843df580-8196-0131-b037-26346df4cec6/status?branch=master)](https://app.codeship.com/projects/14725)
 
 ## License
 
