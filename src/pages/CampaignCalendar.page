@@ -60,10 +60,13 @@
                 editable: false,
                 events: calendarEntries,
                 eventClick: function(event) {
-                    if (event.url) {
-                        window.open(event.url);
-                        return false;
+                    if (!event.url) return;
+                    if (typeof(sforce) != "undefined") {
+                      sforce.one.navigateToSObject(event.id);
+                    } else {
+                      window.open(event.url);
                     }
+                    return false;
                 },
                 eventRender: function(event, element, view){
                     
