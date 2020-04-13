@@ -8,16 +8,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-java@v1
-      with:
-        java-version: 1.8
-    - name: Build with Ant
-      env:
-        SALESFORCE_URL: ${{ secrets.SALESFORCE_URL }}
-        SALESFORCE_USERNAME: ${{ secrets.SALESFORCE_USERNAME }}
-        SALESFORCE_PASSWORD: ${{ secrets.SALESFORCE_PASSWORD }}
-        SALESFORCE_PACKAGE: ${{ secrets.SALESFORCE_PACKAGE }}
-      run: ant -noinput -buildfile build.xml setup
-      run: ant -noinput -buildfile build.xml test
-    
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: ant setup
+        run: ant -noinput -buildfile build.xml setup
+      - name: Build with Ant
+        env:
+          SALESFORCE_URL: ${{ secrets.SALESFORCE_URL }}
+          SALESFORCE_USERNAME: ${{ secrets.SALESFORCE_USERNAME }}
+          SALESFORCE_PASSWORD: ${{ secrets.SALESFORCE_PASSWORD }}
+          SALESFORCE_PACKAGE: ${{ secrets.SALESFORCE_PACKAGE }}
+        run: ant -noinput -buildfile build.xml test
