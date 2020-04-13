@@ -1,34 +1,65 @@
 <project basedir="." xmlns:sf="antlib:com.salesforce">
 
+    <target name="setup">
+        <echo message="igothere" />
+        <exec executable="wget">
+            <arg value="https://gs0.salesforce.com/dwnld/SfdcAnt/salesforce_ant_48.0.zip"/>
+        </exec>
+        <exec executable="unzip">
+            <arg value="salesforce_ant_48.0.zip"/>
+            <arg value="ant-salesforce.jar"/>
+        </exec>
+    </target>
+
     <taskdef resource="com/salesforce/antlib.xml"
-             classPath="lib/ant-salesforce.jar"
+             classPath="ant-salesforce.jar"
              uri="antlib:com.salesforce"/>
 
     <property environment="env"/>
+    <property file=".env" prefix="env" relative="true" basedir="."/>
 
-    <target name="deploy" description="Deploys the code to salesforce.com">
+
+    <target name="deploy" description="Deploy to salesforce.com">
         <echo message="Deploying to Salesforce..."/>
-        <sf:deploy username="${env.SALESFORCE_USERNAME}"
-                   password="${env.SALESFORCE_PASSWORD}"
-                   serverurl="${env.SALESFORCE_URL}"
-                   deployRoot="src"/>
-    </target>
-
-    <target name="test" description="Test without saving to salesforce">
-        <echo message="Testing deployment..."/>
+        <antcall target="setNames" />
+        <antcall target="setNamespace" />
+        <antcall target="webapp" />
         <sf:deploy username="${env.SALESFORCE_USERNAME}"
                    password="${env.SALESFORCE_PASSWORD}"
                    serverurl="${env.SALESFORCE_URL}"
                    deployRoot="src"
-                   checkOnly="true"/>
+                   maxPoll="500"
+                   pollWaitMillis="10000"/>
+    </target>
+
+    <target name="test" description="Test without saving to salesforce">
+        <sf:deploy username="${env.SALESFORCE_USERNAME}"
+                   password="${env.SALESFORCE_PASSWORD}"
+                   serverurl="${env.SALESFORCE_URL}"
+                   deployRoot="src"
+                   checkOnly="true"
+                   runAllTests="true"
+                   testLevel="RunLocalTests"
+                   rollbackOnError="true"
+                   maxPoll="500"
+                   pollWaitMillis="10000"/>
     </target>
 
     <target name="refresh" description="Refresh from org">
         <sf:retrieve username="${env.SALESFORCE_USERNAME}"
                      password="${env.SALESFORCE_PASSWORD}"
                      serverurl="${env.SALESFORCE_URL}"
-                     deployRoot="src"
-                     unpackaged="${env.DEPLOYROOT}/package.xml"/>
+                     retrieveTarget="src"
+                     unpackaged="src/package.xml"/>
+                     <!-- doing unpackaged until we determine package structure -->
+    </target>
+
+    <target name="refreshFromPackage" description="Refresh from org">
+        <sf:retrieve username="${env.SALESFORCE_USERNAME}"
+                     password="${env.SALESFORCE_PASSWORD}"
+                     serverurl="${env.SALESFORCE_URL}"
+                     retrieveTarget="src"
+                     packageNames="${env.SALESFORCE_PACKAGE}"/>
     </target>
 
 </project>

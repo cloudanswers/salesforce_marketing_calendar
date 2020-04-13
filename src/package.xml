@@ -1,24 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Marketing Calendar Free</fullName>
+    <apiAccessLevel>Unrestricted</apiAccessLevel>
+    <description>View your campaigns in a convenient calendar format.
+
+For support or to hear about our other apps, visit us at https://cloudanswers.com</description>
+    <namespacePrefix>marketing_cal</namespacePrefix>
     <types>
-        <members>*</members>
+        <members>CampaignCalendar</members>
+        <members>CampaignCalendarTests</members>
         <name>ApexClass</name>
     </types>
     <types>
-        <members>*</members>
-        <name>ApexComponent</name>
-    </types>
-    <types>
-        <members>*</members>
+        <members>CampaignCalendar</members>
         <name>ApexPage</name>
-    </types>
-    <types>
-        <members>*</members>
-        <name>ApexTrigger</name>
     </types>
     <types>
         <members>Campaign.Color_Status__c</members>
         <name>CustomField</name>
+    </types>
+    <types>
+        <members>Campaign_Calendar_Exclude_Types</members>
+        <name>CustomLabel</name>
+    </types>
+    <types>
+        <members>CustomLabels</members>
+        <name>CustomLabels</name>
+    </types>
+    <types>
+        <members>Marketing_Calendar</members>
+        <name>CustomTab</name>
     </types>
     <types>
         <members>Campaign.MarketingCalendarEventTitle</members>
@@ -26,8 +37,8 @@
         <name>FieldSet</name>
     </types>
     <types>
-        <members>*</members>
+        <members>FullCalendar</members>
         <name>StaticResource</name>
     </types>
-    <version>39.0</version>
+    <version>48.0</version>
 </Package>

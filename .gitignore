@@ -1,6 +1,9 @@
+.env
 .project
 .settings
 salesforce.schema
 config/
 *.sublime-project
 *.sublime-workspace
+salesforce_ant_*.0.zip
+ant-salesforce.jar
