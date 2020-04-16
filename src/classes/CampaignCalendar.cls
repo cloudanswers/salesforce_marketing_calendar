@@ -102,65 +102,50 @@ public with sharing class CampaignCalendar {
     }
     
     @RemoteAction
-    public static List<CalendarEntry> getCalendarEntry(String parentCampaignId,String type){
-         List<CalendarEntry> calendarEntries =  new List<CalendarEntry>();
-         String whereClause='';
-         if(parentCampaignId !=''){
-             whereClause = ' AND ParentId=\''+parentCampaignId+'\'';
-         }
-         
-         if(type != '' ){
-             whereClause =  whereClause + ' AND Type=\''+type+'\'';
-         }
-         
-         List<Campaign> campaigns = queryCampaign(
-                                                     new Set<String>{
-                                                                         'Name',
-                                                                         'StartDate',
-                                                                         'EndDate',
-                                                                         'color_status__c',
-                                                                         'Owner.Name',
-                                                                         'Status',
-                                                                         'Type',
-                                                                         'NumberOfResponses'
-                                                                     }
-                                                     ,'IsActive = true AND StartDate != null AND Color_Status__c != \'Hide\''+whereClause
-                                                 );
-         for(Campaign c : campaigns){
-            calendarEntries.add(new CalendarEntry(c));
-         }
-         
-         return calendarEntries;
-    }
-    
-   
-    private static List<Campaign> queryCampaign(Set<String> additionalFields,String whereClause ) {
-        Set<String> fields = new Set<String>{'id'};
-        String query = 'SELECT Id';
+    public static List<CalendarEntry> getCalendarEntry(String parentCampaignId, String type) {
         
-        for(String fs : additionalFields){
-            if(!fields.contains(fs) && !fields.contains(fs.toLowerCase())){
-                fs = fs.toLowerCase();
-                fields.add(fs);
-                query = query+','+fs;
-            }
+        String whereClause = ' IsActive = true AND StartDate != null AND Color_Status__c != \'Hide\' ';
+        
+        if (String.isNotBlank(parentCampaignId)) {
+            whereClause += ' AND ParentId = :parentCampaignId ';
         }
         
+        if (String.isNotBlank(type)) {
+            whereClause += ' AND Type = :type ';
+        }
+        
+        String query = 'SELECT ' + String.join(queryFields(), ',') + ' FROM Campaign WHERE ' + whereClause;
+        List<Campaign> campaigns = (List<Campaign>)Database.query(query);
+        
+        List<CalendarEntry> calendarEntries =  new List<CalendarEntry>();
+        for(Campaign c : campaigns){
+            calendarEntries.add(new CalendarEntry(c));
+        } 
+        return calendarEntries;
+    }
+    
+    private static List<String> queryFields () {
+        Set<String> fields = new Set<String>{
+            'id', 
+            'name',
+            'startdate',
+            'enddate',
+            'color_status__c',
+            'owner.name',
+            'status',
+            'type',
+            'numberofresponses'
+        };
+		
         for(Schema.FieldSetMember f : SObjectType.Campaign.FieldSets.marketing_cal__MarketingCalendarPopup.getFields()) {
-            if(!fields.contains(f.getFieldPath().toLowerCase())){
-                query = query+','+f.getFieldPath().toLowerCase();
-            }
+            fields.add(f.getFieldPath().toLowerCase());
         }
         
         for(Schema.FieldSetMember f : SObjectType.Campaign.FieldSets.marketing_cal__MarketingCalendarEventTitle.getFields()) {
-            if(!fields.contains(f.getFieldPath().toLowerCase())){
-                query = query+','+f.getFieldPath().toLowerCase();
-            }
+            fields.add(f.getFieldPath().toLowerCase());
         }
         
-        query = query + ' FROM Campaign';
-        query = (whereClause !=null && whereClause!='') ? query +' WHERE ' + whereClause : query;
-        return Database.query(query);
+        return new List<String>(fields);
     }
     
     private static String getCalendarTitleFieldValue(Campaign c){
