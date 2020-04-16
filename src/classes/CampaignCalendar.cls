@@ -77,6 +77,7 @@ public with sharing class CampaignCalendar {
             this.fg = fg;
         }
     }
+    
     public List<Color> getColors(){
         List<Color> displayColors = new List<Color>();
         for(String bgcolor : colors.keySet())
@@ -89,13 +90,13 @@ public with sharing class CampaignCalendar {
         SelectOptions.add(new SelectOption('', '--None--'));
         Set<Id> campaignSet = new Set<Id>();
         
-        for(AggregateResult ar : [SELECT ParentId,Count(Id)recordCount FROM Campaign WHERE ParentId !=NULL AND isActive=TRUE GROUP BY ParentId]){
+        for(AggregateResult ar : [SELECT ParentId,Count(Id)recordCount FROM Campaign WHERE ParentId !=NULL AND isActive=TRUE WITH SECURITY_ENFORCED GROUP BY ParentId]){
             if(ar.get('recordCount') != NULL && Integer.valueOf(ar.get('recordCount')) > 0){
                 campaignSet.add((Id)ar.get('ParentId'));
             }
         }
         
-        for(Campaign cn : [SELECT Id,Name FROM Campaign WHERE Id=:campaignSet ORDER BY Name]){
+        for(Campaign cn : [SELECT Id,Name FROM Campaign WHERE Id=:campaignSet WITH SECURITY_ENFORCED  ORDER BY Name]){
             SelectOptions.add(new SelectOption(cn.Id, cn.Name));
         }
         return SelectOptions;
@@ -114,7 +115,7 @@ public with sharing class CampaignCalendar {
             whereClause += ' AND Type = :type ';
         }
         
-        String query = 'SELECT ' + String.join(queryFields(), ',') + ' FROM Campaign WHERE ' + whereClause;
+        String query = 'SELECT ' + String.join(queryFields(), ',') + ' FROM Campaign WITH SECURITY_ENFORCED WHERE ' + whereClause;
         List<Campaign> campaigns = (List<Campaign>)Database.query(query);
         
         List<CalendarEntry> calendarEntries =  new List<CalendarEntry>();
