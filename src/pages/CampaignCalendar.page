@@ -29,32 +29,33 @@
         }
         
         function getData(parentCampaignId,status){
-            if (parentCampaignId == null) {
+            if(parentCampaignId == null){
                 parentCampaignId = '';
             }
             
-            if (status == null) {
+            if(status == null){
                 status = '';
             }
             
             Visualforce.remoting.Manager.invokeAction(                    
-                '{!$RemoteAction.CampaignCalendar.getCalendarEntry}', 
-                parentCampaignId,status,
-                function(result, event){
-                    if (event.status) {
-                        $.each(result,function(){
-                            this.start = removeGMTOffset(this.startDate);
-                            this.end = removeGMTOffset(this.endDate);
-                        });
-                        $('#calendarx').fullCalendar('removeEvents');
-                        $('#calendarx').fullCalendar('addEventSource', result);
-                        $('#calendarx').fullCalendar('rerenderEvents'); 
-                    } else {
-                        alert(event.message);
-                    } 
-                }, 
-                { escape: true }
-            );
+                    '{!$RemoteAction.CampaignCalendar.getCalendarEntry}', 
+                    parentCampaignId,status,
+                    function(result, event){
+                         if (event.status) {
+                            $.each(result,function(){
+                                this.start = moveOneDayAhead(this.startDate);
+                                this.end = moveOneDayAhead(this.endDate);
+                            });
+                            $('#calendarx').fullCalendar('removeEvents');
+                            $('#calendarx').fullCalendar('addEventSource', result);
+                            $('#calendarx').fullCalendar('rerenderEvents'); 
+                         }
+                         else{
+                            alert(event.message);
+                         } 
+                    }, 
+                    {escape: true}
+                );
         }
         
         function initFullCalendar() {
@@ -103,9 +104,16 @@
                }
            });
         }
-        
-        function removeGMTOffset(data){
+    
+    	function removeGMTOffset(data){
             var ms = data;
+            nDate = new Date(data);
+            data = new Date(ms + (nDate.getTimezoneOffset() * 60000));
+            return data;
+        }
+        
+        function moveOneDayAhead(data){
+            var ms = data + (24 * 60 * 60 * 1000);
             nDate = new Date(data);
             data = new Date(ms + (nDate.getTimezoneOffset() * 60000));
             return data;
