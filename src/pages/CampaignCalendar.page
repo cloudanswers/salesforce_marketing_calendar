@@ -1,6 +1,7 @@
 <apex:page controller="CampaignCalendar" cache="false" >
     <!--jquery-->
     <apex:includeScript value="{!URLFOR($Resource.FullCalendar, 'jquery.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.FullCalendar, 'moment.min.js')}"/>
     <apex:includeScript value="{!URLFOR($Resource.FullCalendar, 'jquery-ui.min.js')}"/>
     <!--fullcalendar-->
     <apex:includeScript value="{!URLFOR($Resource.FullCalendar, 'fullcalendar.min.js')}"/>
