@@ -18,6 +18,7 @@
     <script type='text/javascript'>
         $(document).ready(function() {
             initDataFormatters();
+            initFullCalendar();
             getData();
             $('.combo').select2({width: 'resolve'});
             
@@ -28,38 +29,37 @@
         }
         
         function getData(parentCampaignId,status){
-            if(parentCampaignId == null){
+            if (parentCampaignId == null) {
                 parentCampaignId = '';
             }
             
-            if(status == null){
+            if (status == null) {
                 status = '';
             }
             
             Visualforce.remoting.Manager.invokeAction(                    
-                    '{!$RemoteAction.CampaignCalendar.getCalendarEntry}', 
-                    parentCampaignId,status,
-                    function(result, event){
-                         if (event.status) {
-                            $.each(result,function(){
-                                this.start = removeGMTOffset(this.startDate);
-                                this.end = removeGMTOffset(this.endDate);
-                            });
-                            initFullCalendar(result);
-                         }
-                         else{
-                            alert(event.message);
-                         } 
-                    }, 
-                    {escape: true}
-                );
+                '{!$RemoteAction.CampaignCalendar.getCalendarEntry}', 
+                parentCampaignId,status,
+                function(result, event){
+                    if (event.status) {
+                        $.each(result,function(){
+                            this.start = removeGMTOffset(this.startDate);
+                            this.end = removeGMTOffset(this.endDate);
+                        });
+                        $('#calendarx').fullCalendar('removeEvents');
+                        $('#calendarx').fullCalendar('addEventSource', result);
+                        $('#calendarx').fullCalendar('rerenderEvents'); 
+                    } else {
+                        alert(event.message);
+                    } 
+                }, 
+                { escape: true }
+            );
         }
         
-        function initFullCalendar(calendarEntries){
-            $('#calendarx').empty();
+        function initFullCalendar() {
             $('#calendarx').fullCalendar({
                 editable: false,
-                events: calendarEntries,
                 eventClick: function(event) {
                     if (!event.url) return;
                     if (typeof(sforce) != "undefined") {
@@ -70,7 +70,6 @@
                     return false;
                 },
                 eventRender: function(event, element, view){
-                    
                     element.qtip({ 
                         position: {
                             my: 'top left',  
@@ -83,7 +82,6 @@
                         },
                         content: $("#qtipTemplate").render(event.campaign)
                     });
-                    
                 }
             });
         }
