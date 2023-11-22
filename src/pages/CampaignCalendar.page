@@ -42,9 +42,9 @@
                     parentCampaignId,status,
                     function(result, event){
                          if (event.status) {
-                            $.each(result,function(){
-                                this.start = moveOneDayAhead(this.startDate);
-                                this.end = moveOneDayAhead(this.endDate);
+                            $.each(result, function(){
+                                this.start = parseStartDate(this.startDate);
+                                this.end = parseEndDate(this.endDate);
                             });
                             $('#calendarx').fullCalendar('removeEvents');
                             $('#calendarx').fullCalendar('addEventSource', result);
@@ -112,11 +112,12 @@
             return data;
         }
         
-        function moveOneDayAhead(data){
-            var ms = data + (24 * 60 * 60 * 1000);
-            nDate = new Date(data);
-            data = new Date(ms + (nDate.getTimezoneOffset() * 60000));
-            return data;
+        function parseStartDate(data){
+            return moment.utc(data);
+        }
+    
+    	function parseEndDate(data){
+            return moment.utc(data + 86400000);
         }
         
         $("#configToggleButton").click(function () {
