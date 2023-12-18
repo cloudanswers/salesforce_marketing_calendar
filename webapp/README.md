@@ -1,6 +1,6 @@
-# 🚀 Welcome to your new awesome project!
+# 🚀 Salesforce Marketing Calendar webapp!
 
-This project has been created using **webpack-cli**, you can now run
+You can run
 
 ```
 npm run build
