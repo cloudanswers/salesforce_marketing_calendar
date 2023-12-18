@@ -5,6 +5,7 @@
     <description>View your campaigns in a convenient calendar format.
 
 For support or to hear about our other apps, visit us at https://cloudanswers.com</description>
+    <namespacePrefix>marketing_cal</namespacePrefix>
     <types>
         <members>CampaignCalendar</members>
         <members>CampaignCalendarTests</members>
@@ -12,6 +13,7 @@ For support or to hear about our other apps, visit us at https://cloudanswers.co
     </types>
     <types>
         <members>CampaignCalendar</members>
+        <members>NewCalendar</members>
         <name>ApexPage</name>
     </types>
     <types>

@@ -1,0 +1,20 @@
+<apex:page applyBodyTag="false">
+    
+    <apex:variable var="webapp" value="{!IF($CurrentPage.parameters.localdev=='1', 'http://localhost:8080', $Resource.webapp)}" />
+    
+    <apex:stylesheet value="{!URLFOR($Resource.webapp, 'main.css')}"/>
+    <style type="text/css">
+        .fc-button, .fc-button-group > button {
+        	background-image: none;
+        }
+    </style>
+    <apex:includeScript value="{!webapp}/main.js"/>
+    <body>
+        <div id="calendarx"></div>
+        <div style="max-width: 900px; margin: 0 auto;">
+            <apex:outputLink value="http://www.cloudanswers.com" id="poweredByLink" target="_blank">
+                <apex:image url="{!URLFOR($Resource.FullCalendar, 'poweredby.png')}" width="293" height="44" />
+            </apex:outputLink>
+        </div>
+    </body>
+</apex:page>
