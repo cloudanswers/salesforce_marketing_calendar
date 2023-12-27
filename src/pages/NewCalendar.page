@@ -43,6 +43,11 @@
             font-weight:bold;   
         }
     </style>
+    <script type="text/javascript">
+        var RemoteAction = {
+            getCalendarEntry: '{!$RemoteAction.CampaignCalendar.getCalendarEntry}'
+        }
+    </script>
     <apex:includeScript value="{!webapp}/main.js"/>
     <body>
         <apex:form>

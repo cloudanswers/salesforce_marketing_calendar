@@ -3,6 +3,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
+import moment from 'moment/moment';
 import $ from 'jquery';
 import select2 from 'select2/dist/js/select2';
 import 'select2/dist/css/select2.css';
@@ -83,3 +84,42 @@ document.addEventListener('DOMContentLoaded', function() {
   
     calendar.render();
 });
+
+window.filterData = function() {
+  getCalendarEntries($('#parentCampaign').val(), $('select.campaignType').val());
+}
+
+function getCalendarEntries(parentCampaignId, status){
+  if (parentCampaignId == null) {
+    parentCampaignId = '';
+  }
+  
+  if (status == null) {
+    status = '';
+  }
+  
+  Visualforce.remoting.Manager.invokeAction(                    
+    RemoteAction.getCalendarEntry,
+    parentCampaignId,status,
+    function(result, event) {
+      if (event.status) {
+        $.each(result, function() {
+          this.start = parseStartDate(this.startDate);
+          this.end = parseEndDate(this.endDate);
+        });
+        console.log(result);
+      } else {
+        alert(event.message);
+      }
+    },
+    { escape: true }
+  );
+}
+
+function parseStartDate(data){
+  return moment.utc(data);
+}
+
+function parseEndDate(data){
+  return moment.utc(data + 86400000);
+}
