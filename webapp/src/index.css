@@ -9,3 +9,6 @@ body {
     max-width: 1024px;
     margin: 0 auto;
 }
+.select2-results__options li {
+    margin-left: 0px;
+}

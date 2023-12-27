@@ -3,10 +3,14 @@ import interactionPlugin from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
+import $ from 'jquery';
+import select2 from 'select2/dist/js/select2';
+import 'select2/dist/css/select2.css';
 import './index.css';
 
 document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendarx');
+    $('.combo').select2({width: 'resolve'});
   
     var calendar = new Calendar(calendarEl, {
       plugins: [ interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin ],
