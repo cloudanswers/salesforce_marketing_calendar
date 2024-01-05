@@ -13,7 +13,6 @@ For support or to hear about our other apps, visit us at https://cloudanswers.co
     </types>
     <types>
         <members>CampaignCalendar</members>
-        <members>NewCalendar</members>
         <name>ApexPage</name>
     </types>
     <types>
@@ -39,7 +38,6 @@ For support or to hear about our other apps, visit us at https://cloudanswers.co
     </types>
     <types>
         <members>FullCalendar</members>
-        <members>webapp</members>
         <name>StaticResource</name>
     </types>
     <version>48.0</version>

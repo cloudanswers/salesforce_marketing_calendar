@@ -27,18 +27,18 @@
         <exec executable="npm" failonerror="true" dir="${basedir}/webapp">
             <arg line="run build" />
         </exec>
-        <delete dir="resource-bundles/webapp.resource" />
-        <move file="webapp/dist" tofile="resource-bundles/webapp.resource"/>
+        <delete dir="resource-bundles/FullCalendar.resource" />
+        <move file="webapp/dist" tofile="resource-bundles/FullCalendar.resource"/>
     </target>
 
     <target name="bundleStaticResources">
-        <zip destfile="src/staticresources/webapp.resource" 
-            basedir="resource-bundles/webapp.resource" />
+        <zip destfile="src/staticresources/FullCalendar.resource" 
+            basedir="resource-bundles/FullCalendar.resource" />
     </target>
 
     <target name="unbundleStaticResources">
-        <unzip src="src/staticresources/webapp.resource" 
-            dest="resource-bundles/webapp.resource" />
+        <unzip src="src/staticresources/FullCalendar.resource" 
+            dest="resource-bundles/FullCalendar.resource" />
     </target>
 
     <target name="deploy" description="Deploy to salesforce.com">

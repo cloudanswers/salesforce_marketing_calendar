@@ -11,5 +11,5 @@ ant-salesforce.jar
 # node
 node_modules
 # built webapp resource bundle
-resource-bundles/webapp.resource/*
+resource-bundles/FullCalendar.resource/*
 npm-debug.log
