@@ -53,7 +53,6 @@ function initFullCalendar() {
     },
     initialDate: new Date(),
     eventDidMount: function(info) {
-      console.log(info);
       $(info.el).qtip({
         position: {
             my: 'top left',  
