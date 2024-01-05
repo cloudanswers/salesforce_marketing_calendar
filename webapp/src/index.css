@@ -12,3 +12,9 @@ body {
 .select2-results__options li {
     margin-left: 0px;
 }
+.pageTitleIcon {
+    display: none !important;
+}
+.bPageTitle .pageType {
+    margin-left: 0px !important;
+}
