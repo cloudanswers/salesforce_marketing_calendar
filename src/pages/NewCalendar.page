@@ -67,7 +67,7 @@
                                 <option value="{!so.value}">{!so.label}</option>
                             </apex:repeat>        
                         </select>
-                        <b class="label">Campaign Type</b>
+                        <b class="label">Campaign Type</b>&nbsp;
                         <apex:inputField styleClass="campaignType combo" value="{!campaignObj.Type}" onchange="filterData()" style="min-width:180px"/>
                     </div>
                 </div>
