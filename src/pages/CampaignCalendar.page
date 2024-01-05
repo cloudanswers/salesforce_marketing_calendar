@@ -1,8 +1,8 @@
 <apex:page applyBodyTag="false" controller="CampaignCalendar">
     
-    <apex:variable var="webapp" value="{!IF($CurrentPage.parameters.localdev=='1', 'http://localhost:8080', $Resource.webapp)}" />
+    <apex:variable var="webapp" value="{!IF($CurrentPage.parameters.localdev=='1', 'http://localhost:8080', $Resource.FullCalendar)}" />
     
-    <apex:stylesheet value="{!URLFOR($Resource.webapp, 'main.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.FullCalendar, 'main.css')}"/>
     <style type="text/css">
         body {
             margin: 0px 10px;
@@ -94,7 +94,7 @@
             <div style="max-width: 1024px; margin: 0 auto;">
                 <div id="calendarx"></div>
                 <apex:outputLink value="http://www.cloudanswers.com" id="poweredByLink" target="_blank">
-                    <apex:image url="{!URLFOR($Resource.FullCalendar, 'poweredby.png')}" width="293" height="44" />
+                    <apex:image url="{!URLFOR($Resource.PoweredBy, 'poweredby.png')}" width="293" height="44" />
                 </apex:outputLink>
             </div>
         </apex:form>

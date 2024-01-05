@@ -38,6 +38,7 @@ For support or to hear about our other apps, visit us at https://cloudanswers.co
     </types>
     <types>
         <members>FullCalendar</members>
+        <members>PoweredBy</members>
         <name>StaticResource</name>
     </types>
     <version>48.0</version>
