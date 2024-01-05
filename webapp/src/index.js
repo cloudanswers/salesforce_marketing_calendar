@@ -5,6 +5,8 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import moment from 'moment/moment';
 import $ from 'jquery';
+window.jQuery = $;
+window.$ = $;
 import select2 from 'select2/dist/js/select2';
 import 'select2/dist/css/select2.css';
 import './index.css';
@@ -14,12 +16,29 @@ document.addEventListener('DOMContentLoaded', function() {
   window.calendarX = initFullCalendar();
   // initiate select fields
   $('.combo').select2({width: 'resolve'});
+  initDataFormatters();
   // get calendar entries
   getCalendarEntries(null, null);
 });
 
 window.filterData = function() {
   getCalendarEntries($('#parentCampaign').val(), $('select.campaignType').val());
+}
+
+window.initDataFormatters = function() {
+  $.views.helpers({
+    formatData: function (data, formatType, fieldPath) {     
+      if (data != null && formatType == 'date') {
+        data = removeGMTOffset(data);
+        var d = data.getDate();
+        var m = data.getMonth()+1;
+        var y = data.getFullYear();
+        return y + '-' + (m<=9?'0'+m:m) + '-' + (d<=9?'0'+d:d);
+      } else {
+        return data;
+      }
+    }
+  });
 }
 
 function initFullCalendar() {
@@ -32,6 +51,21 @@ function initFullCalendar() {
       right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
     },
     initialDate: new Date(),
+    eventDidMount: function(info) {
+      console.log(info);
+      $(info.el).qtip({
+        position: {
+            my: 'top left',  
+            at: 'bottom center'
+        },
+        style: { 
+            width: 300,
+            color: 'black',
+            name: 'light'
+        },
+        content: $("#qtipTemplate").render(info.event.extendedProps.campaign)
+      });
+    },
     navLinks: true, // can click day/week names to navigate views
     editable: true,
     dayMaxEvents: true, // allow "more" link when too many events
@@ -70,6 +104,13 @@ function getCalendarEntries(parentCampaignId, status){
     },
     { escape: true }
   );
+}
+
+function removeGMTOffset(data) {
+  var ms = data;
+  var nDate = new Date(data);
+  data = new Date(ms + (nDate.getTimezoneOffset() * 60000));
+  return data;
 }
 
 function parseStartDate(data){

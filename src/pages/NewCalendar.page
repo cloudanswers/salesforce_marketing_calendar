@@ -48,6 +48,23 @@
             getCalendarEntry: '{!$RemoteAction.CampaignCalendar.getCalendarEntry}'
         }
     </script>
+    <script id="qtipTemplate" type="text/x-jQuery-render">
+        <table width="100%">
+            <apex:repeat value="{!$ObjectType.Campaign.FieldSets.MarketingCalendarPopup}" var="f"> 
+                <tr>
+                    {{if '{!f.FieldPath}' == 'OwnerId'}}
+                         <td><b>Owner</b></td>
+                         <td>{{>Owner.Name}}</td>
+                    {{else}} 
+                        <td><b>{!f.Label}</b></td>
+                        <td class="{!f.FieldPath}" >
+                            {{:~formatData({!f.FieldPath},'{!f.type}','{!f.FieldPath}')}} 
+                        </td>
+                    {{/if}}
+                </tr>
+            </apex:repeat>
+        </table>
+    </script>
     <apex:includeScript value="{!webapp}/main.js"/>
     <body>
         <apex:form>
