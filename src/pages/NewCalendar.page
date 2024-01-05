@@ -66,10 +66,6 @@
         </table>
     </script>
     <apex:includeScript value="{!webapp}/main.js"/>
-    <apex:includeScript value="{!URLFOR($Resource.FullCalendar, 'jsrender.js')}"/>  
-    <!--qtip2-->  
-    <apex:includeScript value="{!URLFOR($Resource.FullCalendar, 'jquery.qtip.js')}"/>
-    <apex:stylesheet value="{!URLFOR($Resource.FullCalendar, 'jquery.qtip.css')}"/>
     <body>
         <apex:form >
             

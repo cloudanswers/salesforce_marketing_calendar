@@ -5,8 +5,9 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import moment from 'moment/moment';
 import $ from 'jquery';
-window.jQuery = $;
-window.$ = $;
+require('jsrender')($);
+require('qtip2');
+import 'qtip2/dist/jquery.qtip.css';
 import select2 from 'select2/dist/js/select2';
 import 'select2/dist/css/select2.css';
 import './index.css';
@@ -25,7 +26,7 @@ window.filterData = function() {
   getCalendarEntries($('#parentCampaign').val(), $('select.campaignType').val());
 }
 
-window.initDataFormatters = function() {
+ function initDataFormatters() {
   $.views.helpers({
     formatData: function (data, formatType, fieldPath) {     
       if (data != null && formatType == 'date') {
