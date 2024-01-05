@@ -52,6 +52,7 @@ function getCalendarEntries(parentCampaignId, status){
   // remove existing events
   window.calendarX.removeAllEvents();
   
+  // fetch calendar entries as per filters
   Visualforce.remoting.Manager.invokeAction(                    
     RemoteAction.getCalendarEntry,
     parentCampaignId,status,
