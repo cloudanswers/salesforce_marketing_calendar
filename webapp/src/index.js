@@ -49,7 +49,7 @@ function initFullCalendar() {
     headerToolbar: {
       left: 'prev,next today',
       center: 'title',
-      right: 'dayGridMonth,timeGridWeek,timeGridDay'
+      right: 'dayGridMonth,timeGridWeek,listWeek'
     },
     initialDate: new Date(),
     eventDidMount: function(info) {
