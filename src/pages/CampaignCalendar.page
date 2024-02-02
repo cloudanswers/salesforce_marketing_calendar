@@ -13,7 +13,8 @@
         <apex:repeat value="{!colors}" var="color">
             .calcolor-{!color.bg},
             .fc-agenda .calcolor-{!color.bg} .fc-event-time,
-            .calcolor-{!color.bg} a {
+            .calcolor-{!color.bg} > td,
+            .calcolor-{!color.bg} a, a.calcolor-{!color.bg} > .fc-event-main {
                 background-color: {!color.bg};
                 border-color: {!color.bg};
                 color: {!color.fg};
