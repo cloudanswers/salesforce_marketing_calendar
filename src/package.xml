@@ -32,6 +32,11 @@ For support or to hear about our other apps, visit us at https://cloudanswers.co
         <name>CustomTab</name>
     </types>
     <types>
+        <members>CloudAnswers_Art</members>
+        <members>CloudAnswers_Art/CloudAnswers_Tab_Icon.png</members>
+        <name>Document</name>
+    </types>
+    <types>
         <members>Campaign.MarketingCalendarEventTitle</members>
         <members>Campaign.MarketingCalendarPopup</members>
         <name>FieldSet</name>
