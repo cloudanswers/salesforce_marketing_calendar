@@ -1,170 +1,25 @@
-<apex:page controller="CampaignCalendar" cache="false" >
-    <!--jquery-->
-    <apex:includeScript value="{!URLFOR($Resource.FullCalendar, 'jquery.min.js')}"/>
-    <apex:includeScript value="{!URLFOR($Resource.FullCalendar, 'jquery-ui.min.js')}"/>
-    <!--fullcalendar-->
-    <apex:includeScript value="{!URLFOR($Resource.FullCalendar, 'fullcalendar.min.js')}"/>
-    <apex:stylesheet value="{!URLFOR($Resource.FullCalendar, 'fullcalendar.css')}"/>
-    <apex:includeScript value="{!URLFOR($Resource.FullCalendar, 'jsrender.js')}"/>  
-    <!--qtip2-->  
-    <apex:includeScript value="{!URLFOR($Resource.FullCalendar, 'jquery.qtip.js')}"/>
-    <apex:stylesheet value="{!URLFOR($Resource.FullCalendar, 'jquery.qtip.css')}"/>
-    <!--select 2 -->
-    <apex:includeScript value="{!URLFOR($Resource.FullCalendar, 'select2.js')}"/>
-    <apex:stylesheet value="{!URLFOR($Resource.FullCalendar, 'select2.css')}"/>
+<apex:page applyBodyTag="false" controller="CampaignCalendar">
     
-
-    <script type='text/javascript'>
-        $(document).ready(function() {
-            initDataFormatters();
-            getData();
-            $('.combo').select2({width: 'resolve'});
-            
-        });
-        
-        function filterData(){
-            getData($('#parentCampaign').val(),$('select.campaignType').val());
+    <apex:variable var="webapp" value="{!IF($CurrentPage.parameters.localdev=='1', 'http://localhost:8080', $Resource.FullCalendar)}" />
+    
+    <apex:stylesheet value="{!URLFOR($Resource.FullCalendar, 'main.css')}"/>
+    <style type="text/css">
+        body {
+            margin: 0px 10px;
         }
-        
-        function getData(parentCampaignId,status){
-            if(parentCampaignId == null){
-                parentCampaignId = '';
-            }
-            
-            if(status == null){
-                status = '';
-            }
-            
-            Visualforce.remoting.Manager.invokeAction(                    
-                    '{!$RemoteAction.CampaignCalendar.getCalendarEntry}', 
-                    parentCampaignId,status,
-                    function(result, event){
-                         if (event.status) {
-                            $.each(result,function(){
-                                this.start = removeGMTOffset(this.startDate);
-                                this.end = removeGMTOffset(this.endDate);
-                            });
-                            initFullCalendar(result);
-                         }
-                         else{
-                            alert(event.message);
-                         } 
-                    }, 
-                    {escape: true}
-                );
+        .fc-button, .fc-button-group > button {
+            background-image: none;
         }
-        
-        function initFullCalendar(calendarEntries){
-            $('#calendarx').empty();
-            $('#calendarx').fullCalendar({
-                editable: false,
-                events: calendarEntries,
-                eventClick: function(event) {
-                    if (!event.url) return;
-                    if (typeof(sforce) != "undefined") {
-                      sforce.one.navigateToSObject(event.id);
-                    } else {
-                      window.open(event.url);
-                    }
-                    return false;
-                },
-                eventRender: function(event, element, view){
-                    
-                    element.qtip({ 
-                        position: {
-                            my: 'top left',  
-                            at: 'bottom center'
-                        },
-                        style: { 
-                            width: 300,
-                            color: 'black',
-                            name: 'light'
-                        },
-                        content: $("#qtipTemplate").render(event.campaign)
-                    });
-                    
-                }
-            });
-        }
-        
-       
-       function initDataFormatters(){
-           $.views.helpers({
-               formatData: function (data,formatType,fieldPath) {
-                  
-                   if (data != null && formatType == 'date') {
-                       data = removeGMTOffset(data);
-                       var d = data.getDate();
-                       var m = data.getMonth()+1;
-                       var y = data.getFullYear();
-                       return y + '-' + (m<=9?'0'+m:m) + '-' + (d<=9?'0'+d:d);
-                   }else{
-                       return data;
-                   }
-               }
-           });
-        }
-        
-        function removeGMTOffset(data){
-            var ms = data;
-            nDate = new Date(data);
-            data = new Date(ms + (nDate.getTimezoneOffset() * 60000));
-            return data;
-        }
-        
-        $("#configToggleButton").click(function () {
-            $("#configFormDiv").slideToggle("slow");
-        });
-    </script>
-    <script id="qtipTemplate" type="text/x-jQuery-render">
-       
-        <table width="100%">
-            <apex:repeat value="{!$ObjectType.Campaign.FieldSets.MarketingCalendarPopup}" var="f"> 
-                <tr>
-                    {{if '{!f.FieldPath}' == 'OwnerId'}}
-                         <td><b>Owner</b></td>
-                         <td>{{>Owner.Name}}</td>
-                    {{else}} 
-                        <td><b>{!f.Label}</b></td>
-                        <td class="{!f.FieldPath}" >
-                            {{:~formatData({!f.FieldPath},'{!f.type}','{!f.FieldPath}')}} 
-                        </td>
-                    {{/if}}
-                </tr>
-            </apex:repeat>
-        </table>
-    </script>
-    <style type='text/css'>
-        #calendar {
-            margin: 0 auto;
-        }
-        
         <apex:repeat value="{!colors}" var="color">
             .calcolor-{!color.bg},
             .fc-agenda .calcolor-{!color.bg} .fc-event-time,
-            .calcolor-{!color.bg} a {
+            .calcolor-{!color.bg} > td,
+            .calcolor-{!color.bg} a, a.calcolor-{!color.bg} > .fc-event-main {
                 background-color: {!color.bg};
                 border-color: {!color.bg};
                 color: {!color.fg};
             }
-        
         </apex:repeat>
-        
-        .fc-header-title{
-            font-size:150%;
-        }
-        
-        #calendarx{
-            background-color: #fff;
-            border-width: 1px;
-            border-color:#ddd;
-            padding:10px;
-            box-shadow: none;
-            border-style:solid;
-            border-radius: 4px 4px;
-            margin-top:15px;
-
-        }
         
         .filterBox {
             margin-top:5px;
@@ -183,48 +38,66 @@
            
         }
         
-        .filterBoxTitle{
+        .filterBoxTitle {
             position:absolute;
             color:#808080;
-            font-weight:bold;
-            
+            font-weight:bold;   
         }
-        
-        .label{
-            margin-left:8px;
-        }
-        
-        .combo{
-            margin-left:4px;
-        }
-
     </style>
-    <apex:form >
-        <div style="float:left">
-            <apex:sectionHeader title="Marketing Calendar"/>
-        </div>
-        <div class="filterBox">
-            <span class="filterBoxTitle">FILTERS</span>
-            <div style="margin-top:5px;padding:10px;">
-                <b class="label">Parent Campaign</b>
-                <select id="parentCampaign" onchange="filterData()" class="combo" style="min-width:240px">        
-                    <apex:repeat value="{!ActiveParentCampaigns}" var="so">
-                        <option value="{!so.value}">{!so.label}</option>
-                    </apex:repeat>        
-                </select>
-                <b class="label">Campaign Type</b>
-                <apex:inputField styleClass="campaignType combo" value="{!campaignObj.Type}" onchange="filterData()" style="min-width:180px"/>
+    <script type="text/javascript">
+        var RemoteAction = {
+            getCalendarEntry: '{!$RemoteAction.CampaignCalendar.getCalendarEntry}'
+        }
+    </script>
+    <script id="qtipTemplate" type="text/x-jQuery-render">
+        <table width="100%">
+            <apex:repeat value="{!$ObjectType.Campaign.FieldSets.MarketingCalendarPopup}" var="f"> 
+                <tr>
+                    {{if '{!f.FieldPath}' == 'OwnerId'}}
+                         <td><b>Owner</b></td>
+                         <td>{{>Owner.Name}}</td>
+                    {{else}} 
+                        <td><b>{!f.Label}</b></td>
+                        <td class="{!f.FieldPath}" >
+                            {{:~formatData({!f.FieldPath},'{!f.type}','{!f.FieldPath}')}} 
+                        </td>
+                    {{/if}}
+                </tr>
+            </apex:repeat>
+        </table>
+    </script>
+    <apex:includeScript value="{!webapp}/main.js"/>
+    <body>
+        <apex:form >
+            
+            <div style="max-width: 1024px; margin: 0 auto;">
+                <div style="float: left;">
+                    <apex:sectionHeader title="Marketing Calendar"/>
+                </div>
+                
+                <!-- filters -->
+                <div class="filterBox">
+                    <span class="filterBoxTitle">FILTERS</span>
+                    <div style="margin-top:5px; padding:10px;">
+                        <b class="label">Parent Campaign</b>
+                        <select id="parentCampaign" onchange="filterData()" class="combo" style="min-width: 240px;">        
+                            <apex:repeat value="{!ActiveParentCampaigns}" var="so">
+                                <option value="{!so.value}">{!so.label}</option>
+                            </apex:repeat>        
+                        </select>
+                        <b class="label">Campaign Type</b>&nbsp;
+                        <apex:inputField styleClass="campaignType combo" value="{!campaignObj.Type}" onchange="filterData()" style="min-width:180px"/>
+                    </div>
+                </div>
+                <div style="clear: both;" />
+                <br />
             </div>
-        </div>
-        <div style="clear:both"/>
-        <br/>
-        
-        <div id='calendarx'></div>
-    
-        <div>
-            <apex:outputLink value="http://www.cloudanswers.com" id="poweredByLink" target="_blank">
-                <apex:image url="{!URLFOR($Resource.FullCalendar, 'poweredby.png')}" width="293" height="44" />
-            </apex:outputLink>
-        </div>
-    </apex:form>
+            <div style="max-width: 1024px; margin: 0 auto;">
+                <div id="calendarx"></div>
+                <apex:outputLink value="http://www.cloudanswers.com" id="poweredByLink" target="_blank">
+                    <apex:image url="{!URLFOR($Resource.PoweredBy, 'poweredby.png')}" width="293" height="44" />
+                </apex:outputLink>
+            </div>
+        </apex:form>
+    </body>
 </apex:page>

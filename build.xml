@@ -18,12 +18,33 @@
     <property environment="env"/>
     <property file=".env" prefix="env" relative="true" basedir="."/>
 
+    <target name="webapp">
+        <echo message="Building webapp using webpack"/>
+        <exec executable="npm" failonerror="true" dir="${basedir}/webapp">
+            <arg line="install" />
+            <arg value="--silent"/>
+        </exec>
+        <exec executable="npm" failonerror="true" dir="${basedir}/webapp">
+            <arg line="run build" />
+        </exec>
+        <delete dir="resource-bundles/FullCalendar.resource" />
+        <move file="webapp/dist" tofile="resource-bundles/FullCalendar.resource"/>
+    </target>
+
+    <target name="bundleStaticResources">
+        <zip destfile="src/staticresources/FullCalendar.resource" 
+            basedir="resource-bundles/FullCalendar.resource" />
+    </target>
+
+    <target name="unbundleStaticResources">
+        <unzip src="src/staticresources/FullCalendar.resource" 
+            dest="resource-bundles/FullCalendar.resource" />
+    </target>
 
     <target name="deploy" description="Deploy to salesforce.com">
         <echo message="Deploying to Salesforce..."/>
-        <antcall target="setNames" />
-        <antcall target="setNamespace" />
         <antcall target="webapp" />
+        <antcall target="bundleStaticResources" />
         <sf:deploy username="${env.SALESFORCE_USERNAME}"
                    password="${env.SALESFORCE_PASSWORD}"
                    serverurl="${env.SALESFORCE_URL}"

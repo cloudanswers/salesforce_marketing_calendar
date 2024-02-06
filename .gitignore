@@ -1,9 +1,15 @@
 .env
 .project
 .settings
+.sfdx
 salesforce.schema
 config/
 *.sublime-project
 *.sublime-workspace
 salesforce_ant_*.0.zip
 ant-salesforce.jar
+# node
+node_modules
+# built webapp resource bundle
+resource-bundles/FullCalendar.resource/*
+npm-debug.log
