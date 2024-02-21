@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomTab xmlns="http://soap.sforce.com/2006/04/metadata">
+    <icon>CloudAnswers_Art/CloudAnswers_Tab_Icon.png</icon>
     <label>Marketing Calendar</label>
-    <motif>Custom61: Castle</motif>
+    <motif>Custom108: TV Widescreen</motif>
     <page>CampaignCalendar</page>
 </CustomTab>

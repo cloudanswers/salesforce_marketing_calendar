@@ -16,6 +16,15 @@ For support or to hear about our other apps, visit us at https://cloudanswers.co
         <name>ApexPage</name>
     </types>
     <types>
+        <members>Ltg_Marketing_Calendar</members>
+        <members>Marketing_Calendar</members>
+        <name>CustomApplication</name>
+    </types>
+    <types>
+        <members>cloudonly125x125</members>
+        <name>ContentAsset</name>
+    </types>
+    <types>
         <members>Campaign.Color_Status__c</members>
         <name>CustomField</name>
     </types>
@@ -30,6 +39,11 @@ For support or to hear about our other apps, visit us at https://cloudanswers.co
     <types>
         <members>Marketing_Calendar</members>
         <name>CustomTab</name>
+    </types>
+    <types>
+        <members>CloudAnswers_Art</members>
+        <members>CloudAnswers_Art/CloudAnswers_Tab_Icon.png</members>
+        <name>Document</name>
     </types>
     <types>
         <members>Campaign.MarketingCalendarEventTitle</members>
