@@ -53,13 +53,13 @@
         <table width="100%">
             <apex:repeat value="{!$ObjectType.Campaign.FieldSets.MarketingCalendarPopup}" var="f"> 
                 <tr>
-                    {{if '{!f.FieldPath}' == 'OwnerId'}}
+                    {{if '{!JSENCODE(f.FieldPath)}' == 'OwnerId'}}
                          <td><b>Owner</b></td>
                          <td>{{>Owner.Name}}</td>
                     {{else}} 
-                        <td><b>{!f.Label}</b></td>
-                        <td class="{!f.FieldPath}" >
-                            {{:~formatData({!f.FieldPath},'{!f.type}','{!f.FieldPath}')}} 
+                        <td><b>{!JSENCODE(f.Label)}</b></td>
+                        <td class="{!JSENCODE(f.FieldPath)}" >
+                            {{:~formatData({!JSENCODE(f.FieldPath)},'{!JSENCODE(f.type)}','{!JSENCODE(f.FieldPath)}')}} 
                         </td>
                     {{/if}}
                 </tr>

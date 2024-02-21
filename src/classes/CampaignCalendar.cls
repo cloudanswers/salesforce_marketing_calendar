@@ -115,7 +115,7 @@ public with sharing class CampaignCalendar {
             whereClause += ' AND Type = :type ';
         }
         
-        String query = 'SELECT ' + String.join(queryFields(), ',') + ' FROM Campaign WHERE ' + whereClause + ' WITH SECURITY_ENFORCED';
+        String query = 'SELECT ' + String.escapeSingleQuotes(String.join(queryFields(), ',')) + ' FROM Campaign WHERE ' + whereClause + ' WITH SECURITY_ENFORCED';
         List<Campaign> campaigns = (List<Campaign>)Database.query(query);
         
         List<CalendarEntry> calendarEntries =  new List<CalendarEntry>();
