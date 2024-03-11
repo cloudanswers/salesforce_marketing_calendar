@@ -55,5 +55,9 @@ For support or to hear about our other apps, visit us at https://cloudanswers.co
         <members>PoweredBy</members>
         <name>StaticResource</name>
     </types>
+    <types>
+        <members>*</members>
+        <name>AuraDefinitionBundle</name>
+    </types>
     <version>48.0</version>
 </Package>

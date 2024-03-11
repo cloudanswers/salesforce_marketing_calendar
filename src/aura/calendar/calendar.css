@@ -1,0 +1,66 @@
+.THIS #calendarX{
+    background-color: #fff;
+    border-width: 1px;
+    border-color:#ddd;
+    padding:10px;
+    box-shadow: none;
+    border-style:solid;
+    border-radius: 4px 4px;
+    margin-top:15px;
+}
+
+.THIS .filterBox {
+    margin-top:5px;
+    background-color: #fff;
+    border-width: 1px;
+    border-color:#ddd;
+    padding:5px;
+    box-shadow: none;
+    border-style:solid;
+    border-radius: 4px 4px;
+    float:right;
+    background: linear-gradient(#E5F2F6,#CDE8F0);
+    -moz-box-shadow: 0 3px 5px hsla(100,0%,0%,.3);
+    -webkit-box-shadow: 0 3px 5px hsla(100,0%,0%,.3);
+    box-shadow: 0 3px 5px hsla(100,0%,0%,.3);
+
+}
+
+.THIS .uiInputSelect{
+    display: inline-block;
+}
+
+.THIS .filterBoxTitle{
+    position:absolute;
+    color:#808080;
+    font-weight:bold;
+    font-size: 12px;
+}
+
+.THIS .label{
+    margin-left:8px;
+    font-size: 13px;
+    margin-right:5px;
+}
+
+.THIS .combo{
+    margin-left:4px;
+}
+
+.THIS .filter{
+    float:right;
+}
+
+.THIS #filter-elem-1{
+    float:left;
+}
+
+.THIS #filter-elem-2{
+    float:right;
+}
+
+@media all and (max-width: 980px) {
+    .THIS #filter-elem-2{
+        display: block;;
+    }
+}
