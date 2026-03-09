@@ -95,6 +95,9 @@ function getCalendarEntries(parentCampaignId, status){
         $.each(result, function() {
           this.start = parseStartDate(this.startDate);
           this.end = parseEndDate(this.endDate);
+          const he = require("he");
+          const titleToDecode = this.title;
+          this.title = he.decode(titleToDecode);
         });
         window.calendarX.addEventSource(result);
         window.calendarX.render();
